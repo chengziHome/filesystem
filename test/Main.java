@@ -11,8 +11,8 @@ public class Main {
 
 
     public static void main(String[] args) {
-        System.out.println(Integer.toHexString(512).length());
-        System.out.println(new Integer(127).byteValue());
+        System.out.println(Arrays.toString("/a/b/c".split("/")));
+        System.out.println("/a/b/c".split("/").length);
 
     }
 

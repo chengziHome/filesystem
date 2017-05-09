@@ -18,8 +18,8 @@ public interface Item {
      */
     String getDir_Name();
     void setDir_Name(String name);
-    String getDir_Attr();
-    void setDir_Attr(String name);
+    int getDir_Attr();
+    void setDir_Attr(int val);
     String getReserved();
     void setReserve(String name);
     String getDir_WrtTime();

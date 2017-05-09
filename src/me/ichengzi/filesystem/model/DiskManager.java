@@ -1,5 +1,8 @@
 package me.ichengzi.filesystem.model;
 
+import me.ichengzi.filesystem.model.impl.DefaultDir;
+
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -25,5 +28,17 @@ public interface DiskManager {
     List list();
 
     void cd();
+
+
+    void load();
+    void store();
+    Disk getDisk();
+    String getCurrentPath();
+    void setCurrentDir(String currentDir);
+    Dictionary getCurrentDictionary();
+    void refreshCurrentDir();
+    Deque<String> getPathStack();//主要方便cd命令的实现
+    void setPathStack(Deque<String> stack);
+    DefaultDir getRootDir();
 
 }

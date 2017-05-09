@@ -100,7 +100,8 @@ public class Main {
                     }else if(cmds.length!=2){
                         parameterError();
                     }else{
-                        controller.cd();
+                        String destPath = cmds[1];
+                        controller.cd(destPath);
 
                     }
                     break;
@@ -108,6 +109,7 @@ public class Main {
                     printHelpMessage();
                     break;
                 case "exit":
+                    controller.saveAll();
                     System.out.println("Bye!");
                     return;
                 default:

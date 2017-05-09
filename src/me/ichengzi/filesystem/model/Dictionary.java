@@ -15,6 +15,10 @@ public interface Dictionary {
 
     List<Item> getItems();
     void addItem(Item item);
+    Item find(String name);
+    void delete(Item item);
+
+    void store();//尽管目前每次修改目录页仅仅涉及到一条目录项的变动，但是实现方式上还是整个扇区的覆盖直接重写。
 
 
 

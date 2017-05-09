@@ -1,3 +1,7 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 
 /**
@@ -10,9 +14,19 @@ import java.util.Arrays;
 public class Main {
 
 
-    public static void main(String[] args) {
-        System.out.println(Arrays.toString("/a/b/c".split("/")));
-        System.out.println("/a/b/c".split("/").length);
+    public static void main(String[] args) throws IOException {
+//        OutputStream out = new FileOutputStream("E:/fat/test.flp");
+//        byte[] bs = new byte[1024];
+//        for (int i = 0; i < bs.length; i++) {
+//            bs[i] = 0;
+//        }
+//        out.write(bs);
+//        out.write("chengzi".getBytes());
+
+        System.out.println(Byte.MAX_VALUE);
+        System.out.println(0x0100>>6);
+        System.out.println("贾昭鹤".length());
+        System.out.println("贾昭鹤".getBytes().length);
 
     }
 

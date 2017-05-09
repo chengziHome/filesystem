@@ -35,7 +35,7 @@ public interface Boot {
     int getBPB_FATSz16();
     void setBPB_FATz16(int val);
     int getBPB_SecPerTrk();
-    void setBPB_SecPerTrk();
+    void setBPB_SecPerTrk(int val);
     int getBPB_NumHeads();
     void setBPB_NumHeads(int val);
     int getBPB_HiddSec();
@@ -47,7 +47,7 @@ public interface Boot {
     int getBS_Reserved1();
     void setBS_Reserved1(int val);
     int getBS_BootSig();
-    void setBS_BootSig();
+    void setBS_BootSig(int val);
     int getBS_VolID();
     void setBS_VolID(int val);
     String getBS_VolLab();

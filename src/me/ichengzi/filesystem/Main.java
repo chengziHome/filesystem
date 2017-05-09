@@ -150,7 +150,7 @@ public class Main {
         System.out.println("     edit filename:      Edit the file");
         System.out.println("     exit:               Exit the File System");
         System.out.println("     help:               Print this help massage!");
-
+        System.out.println("   Welcome to https://github.com/chengziHome/filesystem");
         System.out.println("help end.");
 
 

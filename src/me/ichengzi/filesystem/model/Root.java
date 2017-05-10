@@ -14,7 +14,7 @@ import java.util.List;
 public interface Root {
 
     List<Item> getItems();
-    void addItem(Item item);
+    boolean addItem(Item item);
 
 
 }

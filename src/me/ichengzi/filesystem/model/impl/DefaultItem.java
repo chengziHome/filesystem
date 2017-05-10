@@ -13,6 +13,13 @@ import java.util.List;
  * @time 23:03
  */
 public class DefaultItem implements Item {
+
+    private byte[] bs;
+
+    public DefaultItem(byte[] bs) {
+        this.bs = bs;
+    }
+
     @Override
     public String getDir_Name() {
         return null;
@@ -94,5 +101,10 @@ public class DefaultItem implements Item {
     @Override
     public void setSector(List<Sector> sectors) {
 
+    }
+
+    @Override
+    public byte getFirstByte() {
+        return 0;
     }
 }

@@ -11,10 +11,8 @@ package me.ichengzi.filesystem.model;
  */
 public interface Data {
 
-
-
-    Sector getSector(int index);
-    void setSector(int index,Sector sector);
+    void addModifiedSector(Sector sector);
+    void store();
 
 
 

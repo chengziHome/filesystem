@@ -14,6 +14,11 @@ import java.util.List;
  * @time 23:03
  */
 public class DefaultFile implements File,Item{
+
+
+
+
+
     @Override
     public byte[] getBytes() {
         return new byte[0];
@@ -110,5 +115,10 @@ public class DefaultFile implements File,Item{
     @Override
     public void setSector(List<Sector> sectors) {
 
+    }
+
+    @Override
+    public byte getFirstByte() {
+        return 0;
     }
 }

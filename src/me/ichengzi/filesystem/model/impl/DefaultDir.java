@@ -130,10 +130,10 @@ public class DefaultDir implements Dictionary,Item {
 
     }
 
-
-
-
-
+    @Override
+    public byte getFirstByte() {
+        return 0;
+    }
 
 
 }

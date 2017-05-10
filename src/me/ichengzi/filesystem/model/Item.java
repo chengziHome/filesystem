@@ -37,7 +37,7 @@ public interface Item {
     List<Sector> getSector();
     void setSector(List<Sector> sectors);
 
-
+    byte getFirstByte();
 
 
 

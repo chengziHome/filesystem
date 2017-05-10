@@ -1,7 +1,4 @@
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Arrays;
 
 /**
@@ -23,10 +20,14 @@ public class Main {
 //        out.write(bs);
 //        out.write("chengzi".getBytes());
 
-        System.out.println(Byte.MAX_VALUE);
-        System.out.println(0x0100>>6);
-        System.out.println("贾昭鹤".length());
-        System.out.println("贾昭鹤".getBytes().length);
+//        System.out.println(Byte.MAX_VALUE);
+//        System.out.println(0x0100>>6);
+//        System.out.println("贾昭鹤".length());
+//        System.out.println("贾昭鹤".getBytes().length);
+
+        File file = new File("E:/fat/format.flp");
+        System.out.println(file.length());
+        System.out.println((Integer.MAX_VALUE/1024)/1024);
 
     }
 

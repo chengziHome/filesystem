@@ -15,6 +15,12 @@ public class Constant {
     public static final byte ITEM_ATTR_FILE = 0x20;
     public static final byte ITEM_ATTR_DIR = 0x10;
 
+    public static final int BOOT_SECNUM = 1;//必须引用这个值，这个值不变。
+    public static final int SECTOR_SIZE = 512;
+    public static final int ITEM_SIZE = 32;
+    public static final int ROOT_ITEMNUM = 224;
+
+
 
 
 

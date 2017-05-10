@@ -17,7 +17,7 @@ public interface Fat {
     int[] getClusList(int first);
 
     void set(int index,int val);
-    boolean setClusList(int first,int[] clus);
+    boolean setClusList(int first,int[] clus,int len);
 
 
 

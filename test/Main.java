@@ -32,6 +32,8 @@ public class Main {
         byte[] bs = new byte[]{0,1,2,3,4,5};
         System.out.println(Arrays.toString(Arrays.copyOfRange(bs,0,3)));
 
+        System.out.println(0xfff);
+
     }
 
 

@@ -21,6 +21,9 @@ public class Constant {
     public static final int ROOT_ITEMNUM = 224;
 
 
+    public static final int CLUS_LIST_END = 0xFFF;
+
+
 
 
 

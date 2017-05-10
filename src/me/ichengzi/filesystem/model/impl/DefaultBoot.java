@@ -47,6 +47,10 @@ public class DefaultBoot implements Boot {
         this.boot = new byte[Constant.BOOT_SECNUM*Constant.SECTOR_SIZE];
     }
 
+    /**
+     * 这个构造器用于加载Boot数据结构
+     * @param bs
+     */
     public DefaultBoot(byte[] bs){
         boot = bs;
         setBS_JmpBoot(String.valueOf(Arrays.copyOfRange(boot,0,3)));

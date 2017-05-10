@@ -25,9 +25,12 @@ public class Main {
 //        System.out.println("贾昭鹤".length());
 //        System.out.println("贾昭鹤".getBytes().length);
 
-        File file = new File("E:/fat/format.flp");
-        System.out.println(file.length());
-        System.out.println((Integer.MAX_VALUE/1024)/1024);
+//        File file = new File("E:/fat/format.flp");
+//        System.out.println(file.length());
+//        System.out.println((Integer.MAX_VALUE/1024)/1024);
+
+        byte[] bs = new byte[]{0,1,2,3,4,5};
+        System.out.println(Arrays.toString(Arrays.copyOfRange(bs,0,3)));
 
     }
 

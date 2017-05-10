@@ -1,6 +1,10 @@
 package me.ichengzi.filesystem.model.impl;
 
 import me.ichengzi.filesystem.model.Boot;
+import me.ichengzi.filesystem.util.Byte2Int;
+import me.ichengzi.filesystem.util.Constant;
+
+import java.util.Arrays;
 
 /**
  * Coding is pretty charming when you love it!
@@ -37,19 +41,48 @@ public class DefaultBoot implements Boot {
     private BootAttr BS_End;
 
     /**
-     * 简单起见，Boot分区只占一个扇区，不可修改
+     * 这个无参构造器主要用于创建Disk文件
      */
     public DefaultBoot() {
-        this.boot = new byte[512];
+        this.boot = new byte[Constant.BOOT_SECNUM*Constant.SECTOR_SIZE];
     }
 
-    @Override
-    public void init() {
+    public DefaultBoot(byte[] bs){
+        boot = bs;
+        setBS_JmpBoot(String.valueOf(Arrays.copyOfRange(boot,0,3)));
+        setBS_OEMName(String.valueOf(Arrays.copyOfRange(boot,3,11)));
+        setBPB_BytePerSec(Byte2Int.getInt(Arrays.copyOfRange(boot,11,13)));
+        setBPB_SecPerClus(Byte2Int.getInt(Arrays.copyOfRange(boot,13,14)));
+        setBPB_ResvSecCnt(Byte2Int.getInt(Arrays.copyOfRange(boot,14,16)));
+        setBPB_NumFATS(Byte2Int.getInt(Arrays.copyOfRange(boot,16,17)));
+        setBPB_RootEntCnt(Byte2Int.getInt(Arrays.copyOfRange(boot,17,19)));
+        setBPB_TotSec16(Byte2Int.getInt(Arrays.copyOfRange(boot,19,21)));
+        setBPB_Media(String.valueOf(Arrays.copyOfRange(boot,21,22)));
+        setBPB_FATz16(Byte2Int.getInt(Arrays.copyOfRange(boot,22,24)));
+        setBPB_SecPerTrk(Byte2Int.getInt(Arrays.copyOfRange(boot,24,26)));
+        setBPB_NumHeads(Byte2Int.getInt(Arrays.copyOfRange(boot,26,28)));
+        setBPB_HiddSec(Byte2Int.getInt(Arrays.copyOfRange(boot,28,32)));
+
+        setBPB_TotSec32(Byte2Int.getInt(Arrays.copyOfRange(boot,32,36)));
+        setBS_DrvNum(Byte2Int.getInt(Arrays.copyOfRange(boot,36,37)));
+        setBS_Reserved1(Byte2Int.getInt(Arrays.copyOfRange(boot,37,38)));
+        setBS_BootSig(Byte2Int.getInt(Arrays.copyOfRange(boot,38,39)));
+        setBS_VolID(Byte2Int.getInt(Arrays.copyOfRange(boot,39,43)));
+        setBS_VolLab(String .valueOf(Arrays.copyOfRange(boot,43,54)));
+        setBS_FileSysType(String.valueOf(Arrays.copyOfRange(boot,54,62)));
+        setBoot_code(String.valueOf(Arrays.copyOfRange(boot,62,448)));
+        setBoot_end(String.valueOf(Arrays.copyOfRange(boot,510,512)));
 
     }
+
+
+
 
     /*
-        每个set方法都要对其参数的长度进行检查
+        每个set方法都要对其参数的长度进行检查.
+        注意，这里的set方法全部接受的String类型或者int类型，而不是byte数组类型，
+        其实这里也不是很矛盾，因为这里的set方法有两个用处，一个用byte数组初始化的时候，
+        另一种情况是用高级数据结构创建磁盘的时候就很方便了。
      */
     @Override
     public String getBS_JmpBoot() {
@@ -510,6 +543,9 @@ public class DefaultBoot implements Boot {
             BS_End.setOffset(510);
         }
     }
+
+
+
 
 
 }

@@ -12,7 +12,10 @@ package me.ichengzi.filesystem.model.impl;
 public class BootAttr {
 
     private String name;
-    private byte[] bytes;//最终要写入Boot分区的字节
+    /*
+        后来发现这个byte数组有点冗余了，一开始构思这部分不够透彻
+     */
+    private byte[] bytes;
     private int offset;
     private int len;
     private String content;

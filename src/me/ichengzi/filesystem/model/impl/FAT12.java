@@ -1,6 +1,7 @@
 package me.ichengzi.filesystem.model.impl;
 
 import me.ichengzi.filesystem.model.Fat;
+import me.ichengzi.filesystem.util.Constant;
 
 /**
  * Coding is pretty charming when you love it!
@@ -11,6 +12,13 @@ import me.ichengzi.filesystem.model.Fat;
  */
 public class FAT12 implements Fat{
 
+    private byte[] bytes;
+
+    private short[] array;
+
+    public FAT12(int secNum) {
+        bytes = new byte[secNum * Constant.SECTOR_SIZE];
+    }
 
     @Override
     public int[] getIntArray() {

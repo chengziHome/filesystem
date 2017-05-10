@@ -11,7 +11,6 @@ package me.ichengzi.filesystem.model;
  */
 public interface Boot {
 
-    void init();//也就是将Boot对象的属性持久化
 
     String getBS_JmpBoot();
     void setBS_JmpBoot(String val);

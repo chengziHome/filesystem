@@ -25,7 +25,7 @@ public class Constant {
 
     public static final int CLUS_LIST_END = 0xFFF;
 
-
+    public static final int DISK_TOTAL_SIZE = 1500 * 1024;//给Disk的byte数组充足空间
 
 
 

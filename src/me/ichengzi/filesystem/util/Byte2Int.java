@@ -18,17 +18,17 @@ public class Byte2Int {
         int result = 0;
         int len = bs.length;
         if (len==1){
-            result = bs[0];
+            result = Byte.toUnsignedInt(bs[0]);
         }else if(len==2){
-            int high = bs[1];
-            int low = bs[0];
-            result = high<<8 + low;
+            int high = Byte.toUnsignedInt(bs[1]);
+            int low = Byte.toUnsignedInt(bs[0]);
+            result = (high<<8) + low;
         }else if(len==4){
-            int high1 = bs[3];
-            int high2 = bs[2];
-            int high3 = bs[1];
-            int high4 = bs[0];
-            result = high1<<24 + high2<<16 + high3<<8 + high4;
+            int high1 = Byte.toUnsignedInt(bs[3]);
+            int high2 = Byte.toUnsignedInt(bs[2]);
+            int high3 = Byte.toUnsignedInt(bs[1]);
+            int high4 = Byte.toUnsignedInt(bs[0]);
+            result = (high1<<2) + (high2<<16) + (high3<<8) + high4;
         }
         return result;
     }

@@ -1,7 +1,9 @@
 package me.ichengzi.filesystem.model.impl;
 
 import me.ichengzi.filesystem.model.*;
+import me.ichengzi.filesystem.model.File;
 
+import java.io.*;
 import java.util.Deque;
 import java.util.List;
 
@@ -16,6 +18,9 @@ public class DefaultDiskManager implements DiskManager{
 
     private Disk disk;
     private String currentDir;
+    private Dictionary currentDictionary;
+
+    private static final String DISK_FILE_PATH = "E:/fat/format.flp";
 
     public String getCurrentDir() {
         return currentDir;
@@ -27,7 +32,7 @@ public class DefaultDiskManager implements DiskManager{
 
     @Override
     public Dictionary getCurrentDictionary() {
-        return null;
+        return currentDictionary;
     }
 
     @Override
@@ -53,6 +58,8 @@ public class DefaultDiskManager implements DiskManager{
     private static final DefaultDiskManager instance = new DefaultDiskManager();
 
     private DefaultDiskManager() {
+        disk = new DefaultDisk(DISK_FILE_PATH);
+        currentDir = "/";
     }
 
     /**
@@ -98,13 +105,15 @@ public class DefaultDiskManager implements DiskManager{
 
     }
 
-    @Override
-    public void load() {
 
+
+    @Override
+    public void init() {
+        disk.init();
     }
 
     @Override
-    public void store() {
+    public void exit() {
 
     }
 

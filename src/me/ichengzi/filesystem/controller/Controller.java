@@ -29,9 +29,7 @@ public class Controller {
      * 初始化整个硬盘，从真实OS中加载文件，并且初始化内存中的数据结构
      */
     public void init(){
-        manager.load();
-        Disk disk = manager.getDisk();
-        disk.init();//这个过程会递归的初始化所有数据结构
+        manager.init();
         manager.setCurrentDir("/");
         hasInitialized = true;
     }

@@ -30,8 +30,11 @@ public interface DiskManager {
     void cd();
 
 
-    void load();
-    void store();
+    void init();
+    void exit();
+
+
+
     Disk getDisk();
     Root getRoot();
     Fat getFAT1();

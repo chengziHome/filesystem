@@ -1,5 +1,7 @@
 package me.ichengzi.filesystem.model.impl;
 
+import java.util.Arrays;
+
 /**
  * Coding is pretty charming when you love it!
  *
@@ -28,8 +30,15 @@ public class BootAttr {
         bytes = new byte[len];
     }
 
+    public byte[] getBytes() {
+        return bytes;
+    }
 
-//    public BootAttr(int len, String strVal) {
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    //    public BootAttr(int len, String strVal) {
 //        byte[] tmp = strVal.getBytes();
 //        if (tmp.length>len){
 //            throw new IllegalArgumentException("strVal的字节长度超过len指定的不匹配");
@@ -102,9 +111,9 @@ public class BootAttr {
         for (int i = 0; i < len; i++) {
             bytes[i] = 0;
         }
-        byte[] bs = strVal.getBytes();
-        for (int i = 0; i < bs.length; i++) {
-            bytes[i] = bs[i];
+        char[] chars = strVal.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            bytes[i] = (byte) chars[i];
         }
     }
 
@@ -144,5 +153,19 @@ public class BootAttr {
 
     public void setIsNumber(boolean number) {
         isNumber = number;
+    }
+
+    @Override
+    public String toString() {
+        return "BootAttr{" +
+                "name='" + name + '\'' +
+                ", bytes=" + Arrays.toString(bytes) +
+                ", offset=" + offset +
+                ", len=" + len +
+                ", content='" + content + '\'' +
+                ", strVal='" + strVal + '\'' +
+                ", intVal=" + intVal +
+                ", isNumber=" + isNumber +
+                '}';
     }
 }

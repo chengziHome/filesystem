@@ -15,7 +15,11 @@ import java.util.Scanner;
  */
 public class Main {
 
-    private static final Controller controller = null;
+    private static final Controller controller;
+
+    static {
+        controller = new Controller();
+    }
 
 
     public static void main(String[] args) throws IOException {

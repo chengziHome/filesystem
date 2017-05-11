@@ -12,8 +12,8 @@ package me.ichengzi.filesystem.model;
 public interface Boot {
 
 
-    String getBS_JmpBoot();
-    void setBS_JmpBoot(String val);
+    byte[] getBS_JmpBoot();
+    void setBS_JmpBoot(byte[] bs);
     String getBS_OEMName();
     void setBS_OEMName(String name);
     int getBPB_BytePerSec();
@@ -29,8 +29,8 @@ public interface Boot {
     void setBPB_RootEntCnt(int val);
     int getBPB_TotSec16();
     void setBPB_TotSec16(int val);
-    String getBPB_Media();
-    void setBPB_Media(String name);
+    int getBPB_Media();
+    void setBPB_Media(int name);
     int getBPB_FATSz16();
     void setBPB_FATz16(int val);
     int getBPB_SecPerTrk();
@@ -55,8 +55,9 @@ public interface Boot {
     void setBS_FileSysType(String type);
     String getBoot_code();
     void setBoot_code(String code);
-    String getBoot_end();
-    void setBoot_end(String end);
+    int getBoot_end();
+    void setBoot_end(int end);
 
+    String toString();
 
 }

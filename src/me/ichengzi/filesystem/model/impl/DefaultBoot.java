@@ -2,6 +2,7 @@ package me.ichengzi.filesystem.model.impl;
 
 import me.ichengzi.filesystem.model.Boot;
 import me.ichengzi.filesystem.util.Byte2Int;
+import me.ichengzi.filesystem.util.Byte2String;
 import me.ichengzi.filesystem.util.Constant;
 
 import java.util.Arrays;
@@ -53,15 +54,15 @@ public class DefaultBoot implements Boot {
      */
     public DefaultBoot(byte[] bs){
         boot = bs;
-        setBS_JmpBoot(String.valueOf(Arrays.copyOfRange(boot,0,3)));
-        setBS_OEMName(String.valueOf(Arrays.copyOfRange(boot,3,11)));
+        setBS_JmpBoot(Arrays.copyOfRange(boot,0,3));
+        setBS_OEMName(Byte2String.valueOf(Arrays.copyOfRange(boot,3,11)));
         setBPB_BytePerSec(Byte2Int.getInt(Arrays.copyOfRange(boot,11,13)));
         setBPB_SecPerClus(Byte2Int.getInt(Arrays.copyOfRange(boot,13,14)));
         setBPB_ResvSecCnt(Byte2Int.getInt(Arrays.copyOfRange(boot,14,16)));
         setBPB_NumFATS(Byte2Int.getInt(Arrays.copyOfRange(boot,16,17)));
         setBPB_RootEntCnt(Byte2Int.getInt(Arrays.copyOfRange(boot,17,19)));
         setBPB_TotSec16(Byte2Int.getInt(Arrays.copyOfRange(boot,19,21)));
-        setBPB_Media(String.valueOf(Arrays.copyOfRange(boot,21,22)));
+        setBPB_Media(Byte2Int.getInt(Arrays.copyOfRange(boot,21,22)));
         setBPB_FATz16(Byte2Int.getInt(Arrays.copyOfRange(boot,22,24)));
         setBPB_SecPerTrk(Byte2Int.getInt(Arrays.copyOfRange(boot,24,26)));
         setBPB_NumHeads(Byte2Int.getInt(Arrays.copyOfRange(boot,26,28)));
@@ -72,10 +73,10 @@ public class DefaultBoot implements Boot {
         setBS_Reserved1(Byte2Int.getInt(Arrays.copyOfRange(boot,37,38)));
         setBS_BootSig(Byte2Int.getInt(Arrays.copyOfRange(boot,38,39)));
         setBS_VolID(Byte2Int.getInt(Arrays.copyOfRange(boot,39,43)));
-        setBS_VolLab(String .valueOf(Arrays.copyOfRange(boot,43,54)));
-        setBS_FileSysType(String.valueOf(Arrays.copyOfRange(boot,54,62)));
-        setBoot_code(String.valueOf(Arrays.copyOfRange(boot,62,448)));
-        setBoot_end(String.valueOf(Arrays.copyOfRange(boot,510,512)));
+        setBS_VolLab(Byte2String .valueOf(Arrays.copyOfRange(boot,43,54)));
+        setBS_FileSysType(Byte2String.valueOf(Arrays.copyOfRange(boot,54,62)));
+        setBoot_code(Byte2String.valueOf(Arrays.copyOfRange(boot,62,448)));
+        setBoot_end(Byte2Int.getInt(Arrays.copyOfRange(boot,510,512)));
 
     }
 
@@ -89,21 +90,21 @@ public class DefaultBoot implements Boot {
         另一种情况是用高级数据结构创建磁盘的时候就很方便了。
      */
     @Override
-    public String getBS_JmpBoot() {
-        return BS_JmpBoot.getStrVal();
+    public byte[] getBS_JmpBoot() {
+        return BS_JmpBoot.getBytes();
     }
 
 
     @Override
-    public void setBS_JmpBoot(String val) {
-        if (val.getBytes().length!=3)
+    public void setBS_JmpBoot(byte[] bs) {
+        if (bs.length!=3)
             throw new IllegalArgumentException("BS_JmpBoot的长度为3");
         if (BS_JmpBoot!=null){
-            BS_JmpBoot.setStrVal(val);
+//            BS_JmpBoot.setStrVal(val);
         }else{
             BS_JmpBoot = new BootAttr(3);
             BS_JmpBoot.setName("BS_JmpBoot");
-            BS_JmpBoot.setStrVal(val);
+//            BS_JmpBoot.setStrVal(val);
             BS_JmpBoot.setContent("Boot程序的跳转地址");
             BS_JmpBoot.setIsNumber(false);
             BS_JmpBoot.setOffset(0);
@@ -118,7 +119,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBS_OEMName(String name) {
-        if(name.getBytes().length>8)
+        if(name.toCharArray().length>8)
             throw new IllegalArgumentException("OEMName长度最大为8");
         if (BS_OEMName!=null){
             BS_OEMName.setStrVal(name);
@@ -139,7 +140,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBPB_BytePerSec(int val) {
-        if (val>Short.MAX_VALUE)
+        if (val>Short.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BPB_BytePerSec只有2Byte空间，最大值为32767");
         if (BPB_BytePerSec!=null){
             BPB_BytePerSec.setIntVal(val);
@@ -160,7 +161,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBPB_SecPerClus(int val) {
-        if (val>Byte.MAX_VALUE)
+        if (val>Byte.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BPB_SecPerClus只有1Byte空间，最大值为127");
         if (BPB_SecPerClus!=null){
             BPB_SecPerClus.setIntVal(val);
@@ -181,7 +182,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBPB_ResvSecCnt(int val) {
-        if (val>Short.MAX_VALUE)
+        if (val>Short.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BPB_ResvSecCnt只有2Byte空间，最大值为32767");
         if (BPB_ResvSecCnt!=null){
             BPB_ResvSecCnt.setIntVal(val);
@@ -202,7 +203,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBPB_NumFATS(int val) {
-        if (val>Byte.MAX_VALUE)
+        if (val>Byte.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BPB_NumFATS只有1Byte空间，最大值为127");
         if (BPB_NumFATS!=null){
             BPB_NumFATS.setIntVal(val);
@@ -223,7 +224,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBPB_RootEntCnt(int val) {
-        if (val>Short.MAX_VALUE)
+        if (val>Short.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BPB_RootEntCnt只有1Byte空间，最大值为127");
         if (BPB_RootEntCnt!=null){
             BPB_RootEntCnt.setIntVal(val);
@@ -244,7 +245,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBPB_TotSec16(int val) {
-        if (val>Short.MAX_VALUE)
+        if (val>Short.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BPB_TotSec16只有1Byte空间，最大值为127");
         if (BPB_TotSec16!=null){
             BPB_TotSec16.setIntVal(val);
@@ -259,20 +260,22 @@ public class DefaultBoot implements Boot {
     }
 
     @Override
-    public String getBPB_Media() {
-        return BPB_Media.getStrVal();
+    public int getBPB_Media() {
+        return BPB_Media.getIntVal();
     }
 
     @Override
-    public void setBPB_Media(String name) {
-        if (name.getBytes().length!=1)
+    public void setBPB_Media(int name) {
+        if (name>Byte.MAX_VALUE*2+1){
             throw new IllegalArgumentException("BPB_Media的长度为1");
+        }
+
         if (BPB_Media!=null){
-            BPB_Media.setStrVal(name);
+            BPB_Media.setIntVal(name);
         }else{
             BPB_Media = new BootAttr(1);
             BPB_Media.setName("BPB_Media");
-            BPB_Media.setStrVal(name);
+            BPB_Media.setIntVal(name);
             BPB_Media.setContent("介质描述");
             BPB_Media.setIsNumber(false);
             BPB_Media.setOffset(21);
@@ -286,7 +289,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBPB_FATz16(int val) {
-        if (val>Short.MAX_VALUE)
+        if (val>Short.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BPB_FATz16只有2Byte空间，最大值为32767");
         if (BPB_FATz16!=null){
             BPB_FATz16.setIntVal(val);
@@ -307,7 +310,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBPB_SecPerTrk(int val) {
-        if (val>Short.MAX_VALUE)
+        if (val>Short.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BPB_SecPerTrk只有2Byte空间，最大值为32767");
         if (BPB_SecPerTrk!=null){
             BPB_SecPerTrk.setIntVal(val);
@@ -328,7 +331,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBPB_NumHeads(int val) {
-        if (val>Short.MAX_VALUE)
+        if (val>Short.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BPB_NumHeads只有2Byte空间，最大值为32767");
         if (BPB_NumHeads!=null){
             BPB_NumHeads.setIntVal(val);
@@ -389,7 +392,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBS_DrvNum(int val) {
-        if (val>Byte.MAX_VALUE)
+        if (val>Byte.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BS_DrvNum只有1Byte空间，最大值为127");
         if (BS_DrvNum!=null){
             BS_DrvNum.setIntVal(val);
@@ -410,7 +413,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBS_Reserved1(int val) {
-        if (val>Byte.MAX_VALUE)
+        if (val>Byte.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BS_Reserved1有1Byte空间，最大值为127");
         if (BS_Reserved1!=null){
             BS_Reserved1.setIntVal(val);
@@ -431,7 +434,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBS_BootSig(int val) {
-        if (val>Byte.MAX_VALUE)
+        if (val>Byte.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BS_BootSig有1Byte空间，最大值为127");
         if (BS_BootSig!=null){
             BS_BootSig.setIntVal(val);
@@ -471,7 +474,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBS_VolLab(String name) {
-        if(name.getBytes().length>11)
+        if(name.toCharArray().length>11)
             throw new IllegalArgumentException("BS_VolLab长度最大为11");
         if (BS_VolLab!=null){
             BS_VolLab.setStrVal(name);
@@ -492,7 +495,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBS_FileSysType(String type) {
-        if(type.getBytes().length>11)
+        if(type.toCharArray().length>11)
             throw new IllegalArgumentException("BS_FileSysType长度最大为8");
         if (BS_FileSysType!=null){
             BS_FileSysType.setStrVal(type);
@@ -513,7 +516,7 @@ public class DefaultBoot implements Boot {
 
     @Override
     public void setBoot_code(String code) {
-        if(code.getBytes().length>448)
+        if(code.toCharArray().length>448)
             throw new IllegalArgumentException("Boot_code长度最大为448");
         if (BS_BootCode!=null){
             BS_BootCode.setStrVal(code);
@@ -528,20 +531,20 @@ public class DefaultBoot implements Boot {
     }
 
     @Override
-    public String getBoot_end() {
-        return BS_End.getStrVal();
+    public int getBoot_end() {
+        return BS_End.getIntVal();
     }
 
     @Override
-    public void setBoot_end(String end) {
-        if(end.getBytes().length>11)
+    public void setBoot_end(int end) {
+        if(end>Short.MAX_VALUE*2+1)
             throw new IllegalArgumentException("BS_FileSysType长度最大为8");
         if (BS_End!=null){
-            BS_End.setStrVal(end);
+            BS_End.setIntVal(end);
         }else{
             BS_End = new BootAttr(2);
             BS_End.setName("BS_End");
-            BS_End.setStrVal(end);
+            BS_End.setIntVal(end);
             BS_End.setContent("结束标志");
             BS_End.setIsNumber(false);
             BS_End.setOffset(510);
@@ -549,7 +552,32 @@ public class DefaultBoot implements Boot {
     }
 
 
-
-
-
+    @Override
+    public String toString() {
+        return "DefaultBoot{" +
+                "\nboot=" + Arrays.toString(boot) +
+                "\n, BS_JmpBoot=" + BS_JmpBoot.getBytes() +
+                "\n, BS_OEMName=" + BS_OEMName.getStrVal() +
+                "\n, BPB_BytePerSec=" + BPB_BytePerSec.getIntVal() +
+                "\n, BPB_SecPerClus=" + BPB_SecPerClus.getIntVal() +
+                "\n, BPB_ResvSecCnt=" + BPB_ResvSecCnt.getIntVal() +
+                "\n, BPB_NumFATS=" + BPB_NumFATS.getIntVal() +
+                "\n, BPB_RootEntCnt=" + BPB_RootEntCnt.getIntVal() +
+                "\n, BPB_TotSec16=" + BPB_TotSec16.getIntVal() +
+                "\n, BPB_Media=" + BPB_Media.getIntVal() +
+                "\n, BPB_FATz16=" + BPB_FATz16.getIntVal() +
+                "\n, BPB_SecPerTrk=" + BPB_SecPerTrk.getIntVal() +
+                "\n, BPB_NumHeads=" + BPB_NumHeads.getIntVal() +
+                "\n, BPB_HiddSec=" + BPB_HiddSec.getIntVal() +
+                "\n, BPB_TotSec32=" + BPB_TotSec32.getIntVal() +
+                "\n, BS_DrvNum=" + BS_DrvNum.getIntVal() +
+                "\n, BS_Reserved1=" + BS_Reserved1.getIntVal() +
+                "\n, BS_BootSig=" + BS_BootSig.getIntVal() +
+                "\n, BS_VolID=" + BS_VolID.getIntVal() +
+                "\n, BS_VolLab=" + BS_VolLab.getStrVal() +
+                "\n, BS_FileSysType=" + BS_FileSysType.getStrVal() +
+                "\n, BS_BootCode=" + Arrays.toString(BS_BootCode.getBytes()) +
+                "\n, BS_End=" + BS_End.getIntVal() +
+                "\n}";
+    }
 }

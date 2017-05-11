@@ -7,6 +7,7 @@ import me.ichengzi.filesystem.util.Constant;
 
 import java.io.*;
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Coding is pretty charming when you love it!
@@ -24,6 +25,7 @@ public class DefaultDisk implements Disk {
         才不足2MB。
      */
     private byte[] bytes;
+    private int max_len;
     private Boot boot;
     private Fat FAT1;
     private Fat FAT2;
@@ -47,7 +49,7 @@ public class DefaultDisk implements Disk {
         try {
             File file = new File(diskPath);
             InputStream in = new FileInputStream(file);
-            bytes = new byte[new Long(Integer.MAX_VALUE).intValue()];
+            bytes = new byte[Constant.DISK_TOTAL_SIZE];
             int pos = 0;
             int len = 0;
             byte[] tmp = new byte[1024 * 10];
@@ -57,6 +59,7 @@ public class DefaultDisk implements Disk {
                 }
                 pos += len;
             }
+            max_len = pos+1;
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -65,7 +68,9 @@ public class DefaultDisk implements Disk {
             2.创建内部数据结构
          */
 
-        boot = loadBoot();
+        loadBoot();
+        System.out.println(boot.toString());
+
         int FAT_SecNum = boot.getBPB_FATSz16();
         FAT1 = loadFAT(Constant.BOOT_SECNUM*Constant.SECTOR_SIZE,FAT_SecNum);
         FAT2 = loadFAT((Constant.BOOT_SECNUM+FAT_SecNum)* Constant.SECTOR_SIZE,FAT_SecNum);
@@ -144,19 +149,31 @@ public class DefaultDisk implements Disk {
     // TODO: 2017/5/10 定义好各个数据类型之后再来写这里的load过程
 
 
+
     private Boot loadBoot(){
+        boot = new DefaultBoot(Arrays.copyOfRange(bytes,0,Constant.BOOT_SECNUM*Constant.SECTOR_SIZE));
         return null;
     }
 
+    /**
+     * 注意哈，这里要加载两个FAT分区
+     * @param offset
+     * @param secNum
+     * @return
+     */
     private Fat loadFAT(int offset,int secNum){
+        FAT1 = new FAT12(Arrays.copyOfRange(bytes,offset,offset+secNum*Constant.SECTOR_SIZE));
+        FAT2 = new FAT12(Arrays.copyOfRange(bytes,offset+secNum*Constant.SECTOR_SIZE,offset+secNum*2*Constant.SECTOR_SIZE));
         return null;
     }
 
     private RootDir loadRootDir(int offset,int itemNum){
+        rootDir = new RootDir(Arrays.copyOfRange(bytes,offset,offset* itemNum*Constant.ITEM_SIZE));
         return null;
     }
 
     private Data loadData(int offset){
+        data = new DefaultData(Arrays.copyOfRange(bytes,offset,max_len));
         return null;
     }
 

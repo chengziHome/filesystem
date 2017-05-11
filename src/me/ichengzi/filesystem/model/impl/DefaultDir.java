@@ -95,97 +95,97 @@ public class DefaultDir implements Dictionary,Item {
 
     @Override
     public List<Sector> getSectors() {
-        return null;
+        return sectors;
     }
 
     @Override
     public void setSectors(List<Sector> sectors) {
-
+        this.sectors = sectors;
     }
 
     @Override
     public String getDir_Name() {
-        return null;
+        return item.getDir_Name();
     }
 
     @Override
     public void setDir_Name(String name) {
-
+        item.setDir_Name(name);
     }
 
     @Override
     public int getDir_Attr() {
-        return 0;
+        return item.getDir_Attr();
     }
 
     @Override
     public void setDir_Attr(int val) {
-
+        item.setDir_Attr(val);
     }
 
 
     @Override
     public String getReserved() {
-        return null;
+        return item.getReserved();
     }
 
     @Override
     public void setReserve(String name) {
-
+        item.setReserve(name);
     }
 
     @Override
     public int getDir_WrtTime() {
-        return 0;
+        return item.getDir_WrtTime();
     }
 
     @Override
     public void setDir_WrtTime(int time) {
-
+        item.setDir_WrtTime(time);
     }
 
 
 
     @Override
     public int getDir_WrtDate() {
-        return 0;
+        return item.getDir_WrtDate();
     }
 
     @Override
     public void setDir_WrtDate(int date) {
-
+        item.setDir_WrtDate(date);
     }
 
 
 
     @Override
     public int getDir_FstClus() {
-        return 0;
+        return item.getDir_FstClus();
     }
 
     @Override
     public void setDir_FstClus(int val) {
-
+        item.setDir_FstClus(val);
     }
 
     @Override
     public int getDir_FileSize() {
-        return 0;
+        return item.getDir_FileSize();
     }
 
     @Override
     public void setDir_FileSize(int val) {
-
+        item.setDir_FileSize(val);
     }
 
     @Override
     public byte getFirstByte() {
-        return 0;
+        return item.getFirstByte();
     }
 
     @Override
-    public byte setFirstByte(byte b) {
-        return 0;
+    public void setFirstByte(byte b) {
+        item.setFirstByte(b);
     }
 
 

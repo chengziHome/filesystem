@@ -18,6 +18,7 @@ public class DefaultFile implements File,Item{
     private List<Sector> sectors;
     private String content;
 
+
     private static final DiskManager manager = DefaultDiskManager.getManager();
 
     /**
@@ -137,5 +138,10 @@ public class DefaultFile implements File,Item{
     @Override
     public byte getFirstByte() {
         return item.getFirstByte();
+    }
+
+    @Override
+    public void setFirstByte(byte b) {
+        item.setFirstByte(b);
     }
 }

@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface Data {
 
+    int[] search(Item item);//用于查找Buffer里面的索引记录
+
     List<Sector> load(Item item);//根据item来记载目录或者文件
     void store(int[] indexs);//将buffer中一系列索引的Sector项投射到byte数组中去。
 

@@ -4,6 +4,7 @@ import me.ichengzi.filesystem.model.Item;
 import me.ichengzi.filesystem.model.Root;
 import me.ichengzi.filesystem.util.Constant;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class RootDir implements Root {
     public RootDir(byte[] bs){
         this.bytes = bs;
         int itemNum = bs.length/32;
+        items = new ArrayList<>(itemNum);
         for (int i = 0; i < itemNum; i++) {
             Item item = new DefaultItem(Arrays.copyOfRange(bs,i*Constant.ITEM_SIZE,(i+1)*Constant.ITEM_SIZE));
             items.add(item);
@@ -58,9 +60,11 @@ public class RootDir implements Root {
     }
 
 
+    @Override
+    public String toString() {
 
-
-
-
-
+        return "RootDir{" +
+                "items=" + Arrays.toString(items.toArray()) +
+                '}';
+    }
 }

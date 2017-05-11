@@ -3,6 +3,8 @@ package me.ichengzi.filesystem.model.impl;
 import me.ichengzi.filesystem.model.Item;
 import me.ichengzi.filesystem.model.Sector;
 import me.ichengzi.filesystem.util.Byte2Int;
+import me.ichengzi.filesystem.util.Byte2String;
+import me.ichengzi.filesystem.util.Constant;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,9 +36,9 @@ public class DefaultItem implements Item {
 
     public DefaultItem(byte[] bs) {
         this.bytes = bs;
-        setDir_Name(String.valueOf(Arrays.copyOfRange(bytes,0,0xB)));
+        setDir_Name(Byte2String.valueOf(Arrays.copyOfRange(bytes,0,0xB)));
         setDir_Attr(Byte2Int.getInt(Arrays.copyOfRange(bytes,0xB,0xC)));
-        setReserve(String.valueOf(Arrays.copyOfRange(bytes,0xC,0x16)));
+        setReserve(Byte2String.valueOf(Arrays.copyOfRange(bytes,0xC,0x16)));
         setDir_WrtTime(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x16,0x18)));
         setDir_WrtDate(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x18,0x1A)));
         setDir_FstClus(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x1A,0x1C)));
@@ -50,7 +52,7 @@ public class DefaultItem implements Item {
 
     @Override
     public void setDir_Name(String name) {
-        this.dir_Name = dir_Name;
+        this.dir_Name = name;
     }
 
     @Override
@@ -61,7 +63,7 @@ public class DefaultItem implements Item {
 
     @Override
     public void setDir_Attr(int val) {
-        this.dir_Attr = dir_Attr;
+        this.dir_Attr = val;
     }
 
 
@@ -83,7 +85,7 @@ public class DefaultItem implements Item {
 
     @Override
     public void setDir_WrtTime(int time) {
-        this.dir_WrtTime = dir_WrtTime;
+        this.dir_WrtTime = time;
     }
 
     @Override
@@ -93,7 +95,7 @@ public class DefaultItem implements Item {
 
     @Override
     public void setDir_WrtDate(int date) {
-        this.dir_WrtDate = dir_WrtDate;
+        this.dir_WrtDate = date;
     }
 
     @Override
@@ -103,7 +105,7 @@ public class DefaultItem implements Item {
 
     @Override
     public void setDir_FstClus(int val) {
-        this.dir_FstClus = dir_FstClus;
+        this.dir_FstClus = val;
     }
 
     @Override
@@ -113,7 +115,7 @@ public class DefaultItem implements Item {
 
     @Override
     public void setDir_FileSize(int val) {
-        this.dir_FileSize = dir_FileSize;
+        this.dir_FileSize = val;
     }
 
 
@@ -130,5 +132,18 @@ public class DefaultItem implements Item {
     @Override
     public String getAbsolutePath() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "DefaultItem{" +
+                "firstByte="+(int)getFirstByte()+
+                "dir_Name='" + dir_Name + '\'' +
+                ", dir_Attr=" + (dir_Attr== Constant.ITEM_ATTR_FILE?"file":"dir") +
+                ", dir_WrtTime=" + dir_WrtTime +
+                ", dir_WrtDate=" + dir_WrtDate +
+                ", dir_FstClus=" + dir_FstClus +
+                ", dir_FileSize=" + dir_FileSize +
+                "}\n";
     }
 }

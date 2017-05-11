@@ -96,4 +96,9 @@ public class FAT12 implements Fat{
             return true;
         }
     }
+
+    @Override
+    public int[] getFreeClus(int len) {
+        return new int[0];
+    }
 }

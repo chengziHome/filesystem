@@ -30,6 +30,9 @@ public class DefaultDir implements Dictionary,Item {
 
     private static final DefaultDiskManager manager = DefaultDiskManager.getManager();
 
+    public DefaultDir() {
+    }
+
     public DefaultDir(Item item) {
         this.item = item;
         sectors = manager.getData().load(this.item);
@@ -45,6 +48,11 @@ public class DefaultDir implements Dictionary,Item {
             items.add(item1);
             pos += Constant.ITEM_SIZE;
         }
+    }
+
+    @Override
+    public Item getItem() {
+        return null;
     }
 
     @Override
@@ -186,6 +194,11 @@ public class DefaultDir implements Dictionary,Item {
     @Override
     public void setFirstByte(byte b) {
         item.setFirstByte(b);
+    }
+
+    @Override
+    public String getAbsolutePath() {
+        return null;
     }
 
 

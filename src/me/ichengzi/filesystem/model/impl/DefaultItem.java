@@ -123,7 +123,12 @@ public class DefaultItem implements Item {
     }
 
     @Override
-    public byte setFirstByte(byte b) {
-        return 0;
+    public void setFirstByte(byte b) {
+        bytes[0] = b;
+    }
+
+    @Override
+    public String getAbsolutePath() {
+        return null;
     }
 }

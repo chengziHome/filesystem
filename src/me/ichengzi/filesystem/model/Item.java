@@ -37,6 +37,11 @@ public interface Item {
     void setFirstByte(byte b);
 
 
+    /*
+        业务中需要的一些实用的方法。
+     */
+
+    String getAbsolutePath();
 
 
 

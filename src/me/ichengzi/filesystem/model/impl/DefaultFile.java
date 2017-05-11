@@ -21,6 +21,9 @@ public class DefaultFile implements File,Item{
 
     private static final DiskManager manager = DefaultDiskManager.getManager();
 
+    public DefaultFile() {
+    }
+
     /**
      * 要注意，当要创建文件对象的时候，所有的Item对象和Sector链表都是已经就绪的。
      * 无论是在查询操作，还是创建文件的操作中。
@@ -35,6 +38,11 @@ public class DefaultFile implements File,Item{
             System.arraycopy(sector.getBytes(),0,tmp,i*Constant.SECTOR_SIZE,Constant.SECTOR_SIZE);
         }
         content = new String(tmp);
+    }
+
+    @Override
+    public Item getItem() {
+        return null;
     }
 
     @Override
@@ -143,5 +151,10 @@ public class DefaultFile implements File,Item{
     @Override
     public void setFirstByte(byte b) {
         item.setFirstByte(b);
+    }
+
+    @Override
+    public String getAbsolutePath() {
+        return null;
     }
 }

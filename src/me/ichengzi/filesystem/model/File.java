@@ -16,6 +16,8 @@ import java.util.List;
 public interface File {
 
 
+    Item getItem();
+
     String getContent();
     void setContent(byte[] bytes);
     void setContent(String content);

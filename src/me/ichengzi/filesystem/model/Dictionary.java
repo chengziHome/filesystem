@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface Dictionary {
 
+    Item getItem();
+
     List<Item> getItems();
     void addItem(Item item);
     Item find(String name);

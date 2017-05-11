@@ -55,6 +55,7 @@ public class Main {
         System.out.println(i);
         System.out.println(Byte.MAX_VALUE);
 
+        System.out.println(0xF0);
 
     }
 

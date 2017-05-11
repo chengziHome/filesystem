@@ -20,7 +20,7 @@ public class DefaultDiskManager implements DiskManager{
     private String currentDir;
     private Dictionary currentDictionary;
 
-    private static final String DISK_FILE_PATH = "E:/fat/format.flp";
+    private static final String DISK_FILE_PATH = "E:/fat/format1.flp";
 
     public String getCurrentDir() {
         return currentDir;

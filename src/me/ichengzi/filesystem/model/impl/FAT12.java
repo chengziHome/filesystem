@@ -30,13 +30,17 @@ public class FAT12 implements Fat{
      */
     public FAT12(byte[] bs){
         bytes = bs;
-        int arr_len = bs.length*3/2;
+        int arr_len = bytes.length*2/3;//可能最后的余数部分的byte不能使用了，但是也没有必要，就当废弃掉了。
+
         array = new int[arr_len];
         for (int i = 0; i < arr_len; i++) {
+            //这一部分的优先级顺序问题贼他妈烦，总之多多加括号就好了
             if (i%2==0){
-                array[i] = ((int)bs[i*3/2]&0x0f)<<8 + bs[i/2];
+                array[i] = ((Byte.toUnsignedInt(bytes[(i/2)*3+1])&0x0f)<<8) + Byte.toUnsignedInt(bytes[(i/2)*3]);
             }else{
-                array[i] = ((int)bs[i*3/2+2])<<4 + bs[i*3/2]&0xF0>>4;
+                array[i] =
+                        ((Byte.toUnsignedInt(bytes[(i/2)*3+2]))<<4)
+                                + ((Byte.toUnsignedInt(bytes[(i/2)*3+1])&0xF0)>>4);
             }
         }
     }

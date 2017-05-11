@@ -72,10 +72,9 @@ public class DefaultDisk implements Disk {
         System.out.println(boot.toString());
 
         int FAT_SecNum = boot.getBPB_FATSz16();
-        FAT1 = loadFAT(Constant.BOOT_SECNUM*Constant.SECTOR_SIZE,FAT_SecNum);
-        FAT2 = loadFAT((Constant.BOOT_SECNUM+FAT_SecNum)* Constant.SECTOR_SIZE,FAT_SecNum);
-        rootDir = loadRootDir((Constant.BOOT_SECNUM+FAT_SecNum*2)* Constant.SECTOR_SIZE,Constant.ROOT_ITEMNUM);
-        data = loadData((Constant.BOOT_SECNUM+FAT_SecNum*2)* Constant.SECTOR_SIZE+Constant.ROOT_ITEMNUM*Constant.ITEM_SIZE);
+        loadFAT(Constant.BOOT_SECNUM*Constant.SECTOR_SIZE,FAT_SecNum);
+        loadRootDir((Constant.BOOT_SECNUM+FAT_SecNum*2)* Constant.SECTOR_SIZE,Constant.ROOT_ITEMNUM);
+        loadData((Constant.BOOT_SECNUM+FAT_SecNum*2)* Constant.SECTOR_SIZE+Constant.ROOT_ITEMNUM*Constant.ITEM_SIZE);
 
     }
 

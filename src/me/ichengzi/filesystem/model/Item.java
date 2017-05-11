@@ -34,6 +34,7 @@ public interface Item {
 
 
     byte getFirstByte();
+    byte setFirstByte(byte b);
 
 
 

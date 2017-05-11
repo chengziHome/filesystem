@@ -1,9 +1,6 @@
 package me.ichengzi.filesystem.model.impl;
 
-import me.ichengzi.filesystem.model.Dictionary;
-import me.ichengzi.filesystem.model.Disk;
-import me.ichengzi.filesystem.model.DiskManager;
-import me.ichengzi.filesystem.model.File;
+import me.ichengzi.filesystem.model.*;
 
 import java.util.Deque;
 import java.util.List;
@@ -113,6 +110,26 @@ public class DefaultDiskManager implements DiskManager{
 
     @Override
     public Disk getDisk() {
+        return null;
+    }
+
+    @Override
+    public Root getRoot() {
+        return null;
+    }
+
+    @Override
+    public Fat getFAT1() {
+        return null;
+    }
+
+    @Override
+    public Fat getFat2() {
+        return null;
+    }
+
+    @Override
+    public Data getData() {
         return null;
     }
 

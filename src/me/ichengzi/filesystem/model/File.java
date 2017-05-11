@@ -16,9 +16,9 @@ import java.util.List;
 public interface File {
 
 
-    byte[] getBytes();
     String getContent();
     void setContent(byte[] bytes);
+    void setContent(String content);
 
     List<Sector> getSectors();
     void setSectors(List<Sector> sectors);

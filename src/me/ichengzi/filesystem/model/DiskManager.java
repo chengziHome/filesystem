@@ -33,6 +33,17 @@ public interface DiskManager {
     void load();
     void store();
     Disk getDisk();
+    Root getRoot();
+    Fat getFAT1();
+    Fat getFat2();
+    Data getData();
+
+
+
+
+
+
+
     String getCurrentPath();
     void setCurrentDir(String currentDir);
     Dictionary getCurrentDictionary();

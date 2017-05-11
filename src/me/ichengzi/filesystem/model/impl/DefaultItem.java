@@ -16,6 +16,10 @@ import java.util.List;
  */
 public class DefaultItem implements Item {
 
+    /**
+     * 其实Item里面这个byte数组是否保有都可以，因为这些Byte在Dir里面必然是有的
+     *
+     */
     private byte[] bytes;
     private String dir_Name;
     private int dir_Attr;
@@ -116,5 +120,10 @@ public class DefaultItem implements Item {
     @Override
     public byte getFirstByte() {
         return bytes[0];
+    }
+
+    @Override
+    public byte setFirstByte(byte b) {
+        return 0;
     }
 }

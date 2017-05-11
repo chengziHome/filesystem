@@ -33,6 +33,8 @@ public class Main {
         System.out.println(Arrays.toString(Arrays.copyOfRange(bs,0,3)));
 
         System.out.println(0xfff);
+        System.out.println((byte)0xE5);
+        System.out.println(0xE5);
 
     }
 

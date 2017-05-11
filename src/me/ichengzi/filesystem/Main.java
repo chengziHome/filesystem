@@ -1,8 +1,11 @@
 package me.ichengzi.filesystem;
 
 import me.ichengzi.filesystem.controller.Controller;
+import me.ichengzi.filesystem.model.Item;
+import me.ichengzi.filesystem.util.ReturnUtil;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -94,8 +97,11 @@ public class Main {
                     }else if(cmds.length!=1){
                         parameterError();
                     }else{
-                        controller.list();
-                        // TODO: 2017/5/9
+                        ReturnUtil result = controller.list();
+                        List<Item> dirItems = (List<Item>) result.getData().get("dirItems");
+                        List<Item> fileItems = (List<Item>) result.getData().get("fileItems");
+                        printDirList(dirItems);
+                        printFileList(fileItems);
                     }
                     break;
                 case "cd":
@@ -164,6 +170,21 @@ public class Main {
     }
 
 
+    private static void printDirList(List<Item> items){
+        if (!items.isEmpty()){
+            for (Item item:items){
+                System.out.printf("%-12s%-12s<DIR>%-12s  %-30s\n",item.getFormatDate(),item.getFormatTime(),"",item.getDir_Name());
+            }
+        }
+    }
+
+    private static void printFileList(List<Item> items){
+        if (!items.isEmpty()){
+            for (Item item:items){
+                System.out.printf("%-12s%-12s%17s  %-30s\n",item.getFormatDate(),item.getFormatTime(),String.valueOf(item.getDir_FileSize()),item.getDir_Name());
+            }
+        }
+    }
 
 
 

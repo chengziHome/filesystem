@@ -14,7 +14,7 @@ public class Constant {
     public static final byte ITEM_ATTR_DISKID = 0x28;
     public static final byte ITEM_ATTR_FILE = 0x20;
     public static final byte ITEM_ATTR_DIR = 0x10;
-    public static final byte ITEM_FITST_DISABLED = (byte) 0xE5;
+    public static final byte ITEM_FIRST_DISABLED = (byte) 0xE5;
     public static final byte ITEM_FIRST_NOUSE = 0x00;
 
     public static final int BOOT_SECNUM = 1;//必须引用这个值，这个值不变。

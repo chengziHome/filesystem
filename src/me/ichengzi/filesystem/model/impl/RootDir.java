@@ -37,8 +37,19 @@ public class RootDir implements Root {
         }
     }
 
+
+    /**
+     * 注意哈，按照业务要求，仅仅返回有效的Item项
+     * @return
+     */
     @Override
     public List<Item> getItems() {
+        List<Item> result = new ArrayList<>();
+        for (Item item:items){
+            if (item.getFirstByte()==Constant.ITEM_FIRST_NOUSE || item.getFirstByte() == Constant.ITEM_FIRST_DISABLED)
+                continue;
+            result.add(item);
+        }
         return items;
     }
 

@@ -6,6 +6,7 @@ import me.ichengzi.filesystem.model.Item;
 import me.ichengzi.filesystem.model.Sector;
 import me.ichengzi.filesystem.util.Constant;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,6 +58,12 @@ public class DefaultDir implements Dictionary,Item {
 
     @Override
     public List<Item> getItems() {
+        List<Item> result = new ArrayList<>();
+        for (Item item:items){
+            if (item.getFirstByte()==Constant.ITEM_FIRST_NOUSE || item.getFirstByte() == Constant.ITEM_FIRST_DISABLED)
+                continue;
+            result.add(item);
+        }
         return items;
     }
 
@@ -65,7 +72,7 @@ public class DefaultDir implements Dictionary,Item {
         for (int i = 0; i < items.size(); i++) {
             Item tmp = items.get(i);
             byte firstByte = tmp.getFirstByte();
-            if(firstByte == Constant.ITEM_FITST_DISABLED || firstByte == Constant.ITEM_FIRST_NOUSE){
+            if(firstByte == Constant.ITEM_FIRST_DISABLED || firstByte == Constant.ITEM_FIRST_NOUSE){
                 items.add(i,item);
                 return;
             }
@@ -184,6 +191,21 @@ public class DefaultDir implements Dictionary,Item {
     @Override
     public void setDir_FileSize(int val) {
         item.setDir_FileSize(val);
+    }
+
+    @Override
+    public String getFormatTime() {
+        return item.getFormatTime();
+    }
+
+    @Override
+    public String getFormatDate() {
+        return item.getFormatDate();
+    }
+
+    @Override
+    public void setFormatDateTime() {
+        item.setFormatDateTime();
     }
 
     @Override

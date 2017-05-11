@@ -17,18 +17,11 @@ import java.util.List;
 public class DefaultDiskManager implements DiskManager{
 
     private Disk disk;
-    private String currentDir;
+    private String currentPath;
     private Dictionary currentDictionary;
+    private Deque<String> pathStack;
 
     private static final String DISK_FILE_PATH = "E:/fat/format1.flp";
-
-    public String getCurrentDir() {
-        return currentDir;
-    }
-
-    public void setCurrentDir(String currentDir) {
-        this.currentDir = currentDir;
-    }
 
     @Override
     public Dictionary getCurrentDictionary() {
@@ -42,12 +35,12 @@ public class DefaultDiskManager implements DiskManager{
 
     @Override
     public Deque<String> getPathStack() {
-        return null;
+        return pathStack;
     }
 
     @Override
     public void setPathStack(Deque<String> stack) {
-
+        this.pathStack = stack;
     }
 
     @Override
@@ -59,7 +52,7 @@ public class DefaultDiskManager implements DiskManager{
 
     private DefaultDiskManager() {
         disk = new DefaultDisk(DISK_FILE_PATH);
-        currentDir = "/";
+        currentPath = "/";
     }
 
     /**
@@ -119,31 +112,36 @@ public class DefaultDiskManager implements DiskManager{
 
     @Override
     public Disk getDisk() {
-        return null;
+        return disk;
     }
 
     @Override
     public Root getRoot() {
-        return null;
+        return disk.getRoot();
     }
 
     @Override
     public Fat getFAT1() {
-        return null;
+        return disk.getFAT1();
     }
 
     @Override
     public Fat getFat2() {
-        return null;
+        return disk.getFAT2();
     }
 
     @Override
     public Data getData() {
-        return null;
+        return disk.getDate();
     }
 
     @Override
     public String getCurrentPath() {
-        return null;
+        return currentPath;
+    }
+
+    @Override
+    public void setCurrentPath(String currentPath) {
+        this.currentPath = currentPath;
     }
 }

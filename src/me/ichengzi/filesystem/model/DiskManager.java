@@ -48,11 +48,12 @@ public interface DiskManager {
 
 
     String getCurrentPath();
-    void setCurrentDir(String currentDir);
+    void setCurrentPath(String currentPath);
     Dictionary getCurrentDictionary();
     void refreshCurrentDir();
     Deque<String> getPathStack();//主要方便cd命令的实现
     void setPathStack(Deque<String> stack);
+
     DefaultDir getRootDir();
 
 }

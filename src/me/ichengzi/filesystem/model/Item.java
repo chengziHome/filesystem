@@ -31,6 +31,9 @@ public interface Item {
     int getDir_FileSize();
     void setDir_FileSize(int val);
 
+    String getFormatTime();
+    String getFormatDate();
+    void setFormatDateTime();
 
 
     byte getFirstByte();

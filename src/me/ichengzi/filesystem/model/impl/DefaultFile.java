@@ -144,6 +144,21 @@ public class DefaultFile implements File,Item{
     }
 
     @Override
+    public String getFormatTime() {
+        return item.getFormatTime();
+    }
+
+    @Override
+    public String getFormatDate() {
+        return item.getFormatDate();
+    }
+
+    @Override
+    public void setFormatDateTime() {
+
+    }
+
+    @Override
     public byte getFirstByte() {
         return item.getFirstByte();
     }

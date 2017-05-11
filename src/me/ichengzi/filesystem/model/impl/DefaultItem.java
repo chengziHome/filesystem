@@ -119,6 +119,45 @@ public class DefaultItem implements Item {
     }
 
 
+    /**
+     * 时间解析参照微软FAT规范pdf，第17页。
+     * @return
+     */
+    @Override
+    public String getFormatTime() {
+        byte[] bs = Arrays.copyOfRange(bytes,0x16,0x18);
+        int time = (Byte.toUnsignedInt(bs[1])<<8) + (Byte.toUnsignedInt(bs[0]));
+        int second = (time&0x0000001F)*2;
+        int minute = (time&0x000007E0)>>5;
+        int hour = (time&0x0000F800)>>11;
+        String formatTime = (hour<10?"0"+hour:hour) + ":" + (minute<10?"0"+minute:minute) + ":" + (second<10?"0"+second:second);
+
+        return formatTime;
+    }
+
+
+    /**
+     * 日期的解析方法，参照微软的FAT规范pdf，第17页。
+     * @return
+     */
+    @Override
+    public String getFormatDate() {
+        byte[] bs = Arrays.copyOfRange(bytes,0x18,0x1A);
+        int date = (Byte.toUnsignedInt(bs[1])<<8) + Byte.toUnsignedInt(bs[0]);
+        int day = (date&0x0000001F);
+        int mouth = (date&0x000001E0)>>5;
+        int year = ((date&0x0000FE00)>>9)+1980;
+
+        String formatDate = year + "/" + (mouth<10?"0"+mouth:mouth) + "/" + (day<10?"0"+day:day);
+        return formatDate;
+    }
+
+    @Override
+    public void setFormatDateTime() {
+
+    }
+
+
     @Override
     public byte getFirstByte() {
         return bytes[0];

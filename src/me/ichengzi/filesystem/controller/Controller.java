@@ -1,9 +1,7 @@
 package me.ichengzi.filesystem.controller;
 
+import me.ichengzi.filesystem.model.*;
 import me.ichengzi.filesystem.model.Dictionary;
-import me.ichengzi.filesystem.model.Disk;
-import me.ichengzi.filesystem.model.DiskManager;
-import me.ichengzi.filesystem.model.Item;
 import me.ichengzi.filesystem.model.impl.*;
 import me.ichengzi.filesystem.util.Constant;
 import me.ichengzi.filesystem.util.MapUtil;
@@ -30,7 +28,7 @@ public class Controller {
      */
     public void init(){
         manager.init();
-        manager.setCurrentDir("/");
+        manager.setCurrentPath("/");
         hasInitialized = true;
     }
 
@@ -100,28 +98,36 @@ public class Controller {
      * @return
      */
     public ReturnUtil list(){
-        Dictionary currentDir = manager.getCurrentDictionary();
-        List<Item> items = currentDir.getItems();
-        Collections.sort(items, new Comparator<Item>() {
-            /**
-             * 让目录排在文件前面
-             */
-            @Override
-            public int compare(Item o1, Item o2) {
-                if (o1.getDir_Attr() == o2.getDir_Attr()){
-                    return 0;
-                }else if(o1.getDir_Attr() == 0x10){
-                    return 1;
-                }else{
-                    return -1;
-                }
-            }
-        });
+        List<Item> items = null;
+        if ("/".equals(manager.getCurrentPath())){
+            Disk disk = manager.getDisk();
+            Root rootDir = disk.getRoot();
 
+            items = rootDir.getItems();
+        }else{
+            items = manager.getCurrentDictionary().getItems();
+        }
+
+        List<Item> dirItems = new ArrayList<>();
+        List<Item> fileItems = new ArrayList<>();
+        for (Item item:items){
+            if (item.getDir_Attr() == Constant.ITEM_ATTR_DIR){
+                dirItems.add(item);
+            }else if(item.getDir_Attr() == Constant.ITEM_ATTR_FILE){
+                fileItems.add(item);
+            }
+        }
         // TODO: 2017/5/10 关于具体怎么显示这些目录项是View层，也即Shell的责任
 
-        return ReturnUtil.success(new MapUtil().add("items",items).build());
+        return ReturnUtil.success(new MapUtil()
+                .add("dirItems",dirItems)
+                .add("fileItems",fileItems)
+                .build());
+
     }
+
+
+
 
     /**
      * 切换目录,
@@ -143,13 +149,13 @@ public class Controller {
             }
 
             if (tmpPathStack.isEmpty()){
-                manager.setCurrentDir("/");
+                manager.setCurrentPath("/");
             }else{
                 StringBuilder sb = new StringBuilder();
                 for(String path:tmpPathStack){
                     sb.append("/"+path);
                 }
-                manager.setCurrentDir(sb.toString());
+                manager.setCurrentPath(sb.toString());
             }
             manager.setPathStack(tmpPathStack);
             manager.refreshCurrentDir();
@@ -181,13 +187,13 @@ public class Controller {
             }
 
             if (currentPathStack.isEmpty()){
-                manager.setCurrentDir("/");
+                manager.setCurrentPath("/");
             }else{
                 StringBuilder sb = new StringBuilder();
                 for(String path:currentPathStack){
                     sb.append("/"+path);
                 }
-                manager.setCurrentDir(sb.toString());
+                manager.setCurrentPath(sb.toString());
             }
             manager.setPathStack(currentPathStack);
             manager.refreshCurrentDir();

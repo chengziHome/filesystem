@@ -20,6 +20,7 @@ public interface Dictionary {
 
     void store();//尽管目前每次修改目录页仅仅涉及到一条目录项的变动，但是实现方式上还是整个扇区的覆盖直接重写。
 
-
+    List<Sector> getSectors();
+    void setSectors(List<Sector> sectors);
 
 }

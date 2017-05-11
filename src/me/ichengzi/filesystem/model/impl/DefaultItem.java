@@ -2,7 +2,9 @@ package me.ichengzi.filesystem.model.impl;
 
 import me.ichengzi.filesystem.model.Item;
 import me.ichengzi.filesystem.model.Sector;
+import me.ichengzi.filesystem.util.Byte2Int;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,97 +16,105 @@ import java.util.List;
  */
 public class DefaultItem implements Item {
 
-    private byte[] bs;
+    private byte[] bytes;
+    private String dir_Name;
+    private int dir_Attr;
+    private String reserved;
+    private int dir_WrtTime;
+    private int dir_WrtDate;
+    private int dir_FstClus;
+    private int dir_FileSize;
+
+
+
 
     public DefaultItem(byte[] bs) {
-        this.bs = bs;
+        this.bytes = bs;
+        setDir_Name(String.valueOf(Arrays.copyOfRange(bytes,0,0xB)));
+        setDir_Attr(Byte2Int.getInt(Arrays.copyOfRange(bytes,0xB,0xC)));
+        setReserve(String.valueOf(Arrays.copyOfRange(bytes,0xC,0x16)));
+        setDir_WrtTime(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x16,0x18)));
+        setDir_WrtDate(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x18,0x1A)));
+        setDir_FstClus(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x1A,0x1C)));
+        setDir_FileSize(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x1c,0x20)));
     }
 
     @Override
     public String getDir_Name() {
-        return null;
+        return dir_Name;
     }
 
     @Override
     public void setDir_Name(String name) {
-
+        this.dir_Name = dir_Name;
     }
 
     @Override
     public int getDir_Attr() {
-        return 0;
+        return dir_Attr;
     }
 
 
     @Override
     public void setDir_Attr(int val) {
-
+        this.dir_Attr = dir_Attr;
     }
 
 
 
     @Override
     public String getReserved() {
-        return null;
+        return reserved;
     }
 
     @Override
     public void setReserve(String name) {
-
+        this.reserved = name;
     }
 
     @Override
-    public String getDir_WrtTime() {
-        return null;
+    public int getDir_WrtTime() {
+        return dir_WrtTime;
     }
 
     @Override
-    public void setDir_WrtTime(String time) {
-
+    public void setDir_WrtTime(int time) {
+        this.dir_WrtTime = dir_WrtTime;
     }
 
     @Override
-    public String getDir_WrtDate() {
-        return null;
+    public int getDir_WrtDate() {
+        return dir_WrtDate;
     }
 
     @Override
-    public void setDir_WrtDate(String date) {
-
+    public void setDir_WrtDate(int date) {
+        this.dir_WrtDate = dir_WrtDate;
     }
 
     @Override
     public int getDir_FstClus() {
-        return 0;
+        return dir_FstClus;
     }
 
     @Override
     public void setDir_FstClus(int val) {
-
+        this.dir_FstClus = dir_FstClus;
     }
 
     @Override
     public int getDir_FileSize() {
-        return 0;
+        return dir_FileSize;
     }
 
     @Override
     public void setDir_FileSize(int val) {
-
+        this.dir_FileSize = dir_FileSize;
     }
 
-    @Override
-    public List<Sector> getSector() {
-        return null;
-    }
-
-    @Override
-    public void setSector(List<Sector> sectors) {
-
-    }
 
     @Override
     public byte getFirstByte() {
-        return 0;
+        return bytes[0];
     }
 }

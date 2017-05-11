@@ -1,5 +1,7 @@
 package me.ichengzi.filesystem.model;
 
+import java.util.List;
+
 /**
  * Coding is pretty charming when you love it!
  *
@@ -17,6 +19,9 @@ public interface File {
     byte[] getBytes();
     String getContent();
     void setContent(byte[] bytes);
+
+    List<Sector> getSectors();
+    void setSectors(List<Sector> sectors);
 
 
 }

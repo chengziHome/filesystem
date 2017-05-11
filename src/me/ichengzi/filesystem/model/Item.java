@@ -22,20 +22,16 @@ public interface Item {
     void setDir_Attr(int val);
     String getReserved();
     void setReserve(String name);
-    String getDir_WrtTime();
-    void setDir_WrtTime(String time);
-    String getDir_WrtDate();
-    void setDir_WrtDate(String date);
+    int getDir_WrtTime();
+    void setDir_WrtTime(int time);
+    int getDir_WrtDate();
+    void setDir_WrtDate(int date);
     int getDir_FstClus();
     void setDir_FstClus(int val);
     int getDir_FileSize();
     void setDir_FileSize(int val);
 
-    /*
-        簇链表数据
-     */
-    List<Sector> getSector();
-    void setSector(List<Sector> sectors);
+
 
     byte getFirstByte();
 

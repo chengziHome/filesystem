@@ -28,13 +28,17 @@ public class Controller {
      */
     public void init(){
         manager.init();
-        manager.setCurrentPath("/");
+        manager.setCurrentPathStack(new ArrayDeque<>());
         hasInitialized = true;
     }
 
 
     public boolean hasInitialized(){
         return hasInitialized;
+    }
+
+    public DiskManager getManager(){
+        return manager;
     }
 
     /**
@@ -104,20 +108,20 @@ public class Controller {
             Root rootDir = disk.getRoot();
 
             items = rootDir.getItems();
-        }else{
-            items = manager.getCurrentDictionary().getItems();
-        }
+    }else{
+        items = manager.getCurrentDictionary().getItems();
+    }
 
-        List<Item> dirItems = new ArrayList<>();
-        List<Item> fileItems = new ArrayList<>();
-        for (Item item:items){
-            if (item.getDir_Attr() == Constant.ITEM_ATTR_DIR){
-                dirItems.add(item);
-            }else if(item.getDir_Attr() == Constant.ITEM_ATTR_FILE){
-                fileItems.add(item);
-            }
+    List<Item> dirItems = new ArrayList<>();
+    List<Item> fileItems = new ArrayList<>();
+    for (Item item:items){
+        if (item.getDir_Attr() == Constant.ITEM_ATTR_DIR){
+            dirItems.add(item);
+        }else if(item.getDir_Attr() == Constant.ITEM_ATTR_FILE){
+            fileItems.add(item);
         }
-        // TODO: 2017/5/10 关于具体怎么显示这些目录项是View层，也即Shell的责任
+    }
+    // TODO: 2017/5/10 关于具体怎么显示这些目录项是View层，也即Shell的责任
 
         return ReturnUtil.success(new MapUtil()
                 .add("dirItems",dirItems)
@@ -132,73 +136,86 @@ public class Controller {
     /**
      * 切换目录,
      * Shell里面还是要对cd的参数做一定的校验，起码格式要正确撒
+     * 注意，对Item的absolutePath的维护统一放在这里，因为也只有这里会更换目录
+     * 在创建DefaultDir对象之前要设置到item的absolute属性，因为在Default的构造函数里面会登记到内存管理的注册表
+     * 这里也是绝对路径的主要用途之一。总之这个设计非常糟糕。
+     * 另外注意，所有pop出currentPathStack的都已经设置了absolutePath,仅需对那些新push进去的设置
+     * 或者说，push和new DefaultDir之前一定要设置absolutepath
+     *
      */
     public ReturnUtil cd(String dest){
-        Deque<String> currentPath = manager.getPathStack();
-        if (dest.startsWith("/")){
+        if (dest.startsWith("/")){//是绝对路径，就和当前目录无关了
             String[] paths = dest.split("/");
-            DefaultDir father = manager.getRootDir();
-            Deque<String> tmpPathStack = new ArrayDeque<>();
-            for (int i = 1; i < paths.length; i++) {
-                Item item = father.find(paths[i]);
-                if (item == null || item.getDir_Attr()== Constant.ITEM_ATTR_FILE){
-                    return ReturnUtil.error(item.getDir_Name() + "是文件，并非目录");
+            if (paths.length<2){//直接转到根目录
+                manager.setCurrentPathStack(new ArrayDeque<>());
+            }else{//不仅是根目录
+                Root rootDir = manager.getRoot();
+                Item rootItem = rootDir.find(paths[1]);
+                if(rootItem==null){
+                    return ReturnUtil.error("根目录下无目录:"+paths[1]);
                 }
-                tmpPathStack.push(paths[i]);
-                father = new DefaultDir(item);
-            }
+                rootItem.setAbsolutePath("/"+rootItem.getDir_Name()+"/");
+                Deque<Item> tmpPathStack = new ArrayDeque<>();
 
-            if (tmpPathStack.isEmpty()){
-                manager.setCurrentPath("/");
-            }else{
-                StringBuilder sb = new StringBuilder();
-                for(String path:tmpPathStack){
-                    sb.append("/"+path);
+                tmpPathStack.push(rootItem);
+                Dictionary father = new DefaultDir(rootItem);//内部可能跟新registerTable
+
+                StringBuilder fatherPath = new StringBuilder();
+                fatherPath.append("/"+rootItem+"/");
+                for (int i = 2; i < paths.length; i++) {
+                    Item item = father.find(paths[i]);
+                    if (item == null || item.getDir_Attr()== Constant.ITEM_ATTR_FILE){
+                        return ReturnUtil.error(item.getDir_Name() + "目录未找到");
+                    }
+                    fatherPath.append(item.getDir_Name()+"/");
+                    item.setAbsolutePath(fatherPath.toString());
+
+                    tmpPathStack.push(item);
+                    father = new DefaultDir(item);//内部可能跟新registerTable
                 }
-                manager.setCurrentPath(sb.toString());
+                manager.setCurrentPathStack(tmpPathStack);
             }
-            manager.setPathStack(tmpPathStack);
-            manager.refreshCurrentDir();
-
-        }else if (".".equals(dest) || "./".equals(dest)){
+        }else if (".".equals(dest) || "./".equals(dest)){//如果是当前目录
             return ReturnUtil.success();
-        }else{
+        }else{//相对目录的话，就需要根据当前目录的值来计算
+
             String[] paths = dest.split("/");
-            Deque<String> destPath = new ArrayDeque<>();
-            Deque<String> currentPathStack = manager.getPathStack();
-            Dictionary currentDir = manager.getCurrentDictionary();
-            for (int i = 0; i < paths.length; i++) {//0号元素为空
-                if ("..".equals(paths[i])){
-                    if (currentPathStack.isEmpty()){
+            Deque<Item> copyStack = manager.copyCurrentPathStack();
+            for (int i = 0; i < paths.length; i++) {
+                if ("..".equals(paths[i])){//向上
+                    if (copyStack.isEmpty()){
                         return ReturnUtil.error("根目录无上层目录");
                     }else{
-                        currentPathStack.pop();
+                        copyStack.pop();
                     }
-                }else{
-                    Item item = currentDir.find(paths[i]);
-                    if (item == null){
-                        return ReturnUtil.error("未找到目录："+item.getDir_Name());
-                    }else if(item.getDir_Attr() == Constant.ITEM_ATTR_FILE){
-                        return ReturnUtil.error("目录项"+item.getDir_Name()+"是文件，非目录");
+                }else{//向下
+                    Item son = null;
+                    if (copyStack.isEmpty()){
+                        son = manager.getRoot().find(paths[i]);
                     }else{
-                        currentPathStack.push(paths[i]);
+                        Dictionary currentDir = new DefaultDir(copyStack.peek());//栈里面的Item一定有absolutePath属性
+                        son = currentDir.find(paths[i]);
+                    }
+
+
+                    if (son == null){
+                        return ReturnUtil.error("未找到目录："+son.getDir_Name());
+                    }else if(son.getDir_Attr() == Constant.ITEM_ATTR_FILE){
+                        return ReturnUtil.error("目录项"+son.getDir_Name()+"是文件，非目录");
+                    }else{
+                        if (copyStack.isEmpty()){
+                            son.setAbsolutePath("/");
+                        }else{
+                            String fatherAPath = copyStack.peek().getAbsolutePath();
+                            son.setAbsolutePath(fatherAPath+son.getDir_Name()+"/");
+                        }
+                        copyStack.push(son);
                     }
                 }
             }
-
-            if (currentPathStack.isEmpty()){
-                manager.setCurrentPath("/");
-            }else{
-                StringBuilder sb = new StringBuilder();
-                for(String path:currentPathStack){
-                    sb.append("/"+path);
-                }
-                manager.setCurrentPath(sb.toString());
-            }
-            manager.setPathStack(currentPathStack);
-            manager.refreshCurrentDir();
+            //当for循环执行完，说明所有的目录节点都是合法的，这个时候要更新currentPathStack
+            manager.setCurrentPathStack(copyStack);
         }
-
         return ReturnUtil.success();
 
     }

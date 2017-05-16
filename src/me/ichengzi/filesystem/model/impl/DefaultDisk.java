@@ -59,6 +59,7 @@ public class DefaultDisk implements Disk {
                 }
                 pos += len;
             }
+            System.out.println("bytes:"+Arrays.toString(Arrays.copyOfRange(bytes,0x2800,0x2820)));
             max_len = pos+1;
         } catch (IOException e) {
             e.printStackTrace();

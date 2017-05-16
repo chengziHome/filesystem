@@ -45,7 +45,7 @@ public interface Item {
      */
 
     String getAbsolutePath();
-
+    String setAbsolutePath(String absolutePath);
 
 
 }

@@ -43,7 +43,11 @@ public class DefaultData implements Data {
         this.bytes = bytes;
         registeTable = new ArrayDeque<RegisteEntry>();
         //这里是个固定大小，模拟内存仅能容纳100个扇区，所以理论上下面的所有方法都不应该调用List的remove方法。
-        sectorTable = new ArrayList<SectorEntry>(SECTOR_TABLE_MAX);
+        sectorTable = new ArrayList<SectorEntry>();
+        for (int i = 0; i < SECTOR_TABLE_MAX; i++) {
+            sectorTable.add(null);
+        }
+
         remaining = SECTOR_TABLE_MAX;
     }
 
@@ -63,7 +67,9 @@ public class DefaultData implements Data {
         String absolutePath = item.getAbsolutePath();
 
         for (RegisteEntry entry:registeTable){
-            if (entry.getAbsolutePath() == item.getAbsolutePath()){
+            String str1 = entry.getAbsolutePath();
+            String str2 = item.getAbsolutePath();
+            if (str1.equals(str2)){
                 return entry.getIndexs();
             }
         }
@@ -81,7 +87,7 @@ public class DefaultData implements Data {
 
         String absolutePath = item.getAbsolutePath();
         if (search(item)!=null){
-            List<Sector> result = null;
+            List<Sector> result = new ArrayList<>();
             int[] indexs = search(item);
 
             for (Integer integer:indexs){
@@ -91,6 +97,7 @@ public class DefaultData implements Data {
             return result;
         }else{//需要从byte数组加载
             int fstSec = item.getDir_FstClus();
+
             int[] indexs = manager.getFAT1().getClusList(fstSec);
             int need = indexs.length;
             while(need>remaining){//最简单的FIFO替换策略
@@ -106,6 +113,7 @@ public class DefaultData implements Data {
                 if (sectorTable.get(i)==null){//空闲
                     SectorEntry entry = new SectorEntry(indexs[pos],list.get(pos));
                     sectorTable.add(i,entry);
+                    res_indexs[pos] = i;
                     pos++;
                 }
                 if (pos == need)
@@ -206,13 +214,22 @@ public class DefaultData implements Data {
 
 
     /**
-     * 从byte数组中加载
+     * 从byte数组中加载Sector对象的数组，
+     * 要注意，这里索引从1开始，就是说byte数组的第一组的索引是1
      * @param indexs
      * @return
      */
     @Override
     public List<Sector> getSectorList(int[] indexs) {
-        return null;
+
+        List<Sector> result = new ArrayList<>();
+        for (int i = 0; i < indexs.length; i++) {
+            int index = indexs[i];
+            Sector sector = new DefaultSector(Arrays.copyOfRange(bytes,(index-1)*Constant.SECTOR_SIZE,index*Constant.SECTOR_SIZE));
+            result.add(sector);
+        }
+
+        return result;
     }
 
 
@@ -238,6 +255,14 @@ public class DefaultData implements Data {
         public Sector getSector() {
             return sector;
         }
+
+        @Override
+        public String toString() {
+            return "SectorEntry{" +
+                    "secNum=" + secNum +
+                    ", sector=" + sector +
+                    '}';
+        }
     }
 
     class RegisteEntry{
@@ -257,7 +282,27 @@ public class DefaultData implements Data {
         public int[] getIndexs() {
             return indexs;
         }
+
+        @Override
+        public String toString() {
+            return "RegisteEntry{" +
+                    "absolutePath='" + absolutePath + '\'' +
+                    ", indexs=" + Arrays.toString(indexs) +
+                    '}';
+        }
     }
+
+
+    /*
+        测试方法
+     */
+
+    public void printTable(){
+        System.out.println("regisTable:"+Arrays.toString(registeTable.toArray()));
+        System.out.println("sectorTable:"+Arrays.toString(sectorTable.toArray()));
+
+    }
+
 
 
 

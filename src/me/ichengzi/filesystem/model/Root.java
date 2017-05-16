@@ -15,6 +15,7 @@ public interface Root {
 
     List<Item> getItems();
     boolean addItem(Item item);
+    Item find(String name);
 
 
 

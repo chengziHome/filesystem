@@ -44,6 +44,7 @@ public class DefaultDir implements Dictionary,Item {
         }
         int pos = 0;
         int len = tmp.length;
+        items = new ArrayList<>();
         while(pos<len){
             Item item1 = new DefaultItem(Arrays.copyOfRange(tmp,pos,pos+Constant.ITEM_SIZE));
             items.add(item1);
@@ -220,6 +221,11 @@ public class DefaultDir implements Dictionary,Item {
 
     @Override
     public String getAbsolutePath() {
+        return null;
+    }
+
+    @Override
+    public String setAbsolutePath(String absolutePath) {
         return null;
     }
 

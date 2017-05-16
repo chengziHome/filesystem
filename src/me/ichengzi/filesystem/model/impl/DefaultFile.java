@@ -172,4 +172,9 @@ public class DefaultFile implements File,Item{
     public String getAbsolutePath() {
         return null;
     }
+
+    @Override
+    public String setAbsolutePath(String absolutePath) {
+        return null;
+    }
 }

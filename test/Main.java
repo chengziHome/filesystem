@@ -1,9 +1,7 @@
 import sun.util.resources.cldr.aa.CalendarData_aa_ER;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Coding is pretty charming when you love it!
@@ -21,9 +19,11 @@ public class Main {
         System.out.println((byte)0xaa);
         System.out.println((0x4AAA&0x000001E0)>>5);
 
+        System.out.println("/a".split("/").length);
+        System.out.println("/   ".split("/").length);
 
-
-
+        List<String> list = new ArrayList<String>(100);
+        System.out.println(list.get(10));
 
 
     }

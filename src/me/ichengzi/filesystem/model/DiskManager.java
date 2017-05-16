@@ -43,17 +43,22 @@ public interface DiskManager {
 
 
 
-
+    /*
+        对当前目录的维护
+     */
 
 
 
     String getCurrentPath();
-    void setCurrentPath(String currentPath);
     Dictionary getCurrentDictionary();
-    void refreshCurrentDir();
-    Deque<String> getPathStack();//主要方便cd命令的实现
-    void setPathStack(Deque<String> stack);
+    Item popItem();
+    void pushItem(Item item);
 
-    DefaultDir getRootDir();
+    Deque<Item> copyCurrentPathStack();
+    void setCurrentPathStack(Deque<Item> stack);
+
+
+
+
 
 }

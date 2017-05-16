@@ -5,6 +5,7 @@ import me.ichengzi.filesystem.model.Item;
 import me.ichengzi.filesystem.util.ReturnUtil;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
@@ -103,6 +104,7 @@ public class Main {
                         printDirList(dirItems);
                         printFileList(fileItems);
                     }
+                    currentPath();
                     break;
                 case "cd":
                     if (!controller.hasInitialized()){
@@ -114,6 +116,7 @@ public class Main {
                         controller.cd(destPath);
 
                     }
+                    currentPath();
                     break;
                 case "help":
                     printHelpMessage();
@@ -126,10 +129,31 @@ public class Main {
                     System.out.println("Incorrect input! Type help for more detailed information.");
 
                     break;
+                /*
+                    测试工具
+                 */
+                case "pwd":
+
+                    if (!controller.hasInitialized()){
+                        initError();
+                    }else{
+//                        controller.getManager().getData().printTable();
+                        System.out.println("currentPath:"+controller.getManager().getCurrentPath());
+                        System.out.println("currentDictionary:"+controller.getManager().getCurrentDictionary());
+
+                    }
+
+                    break;
             }
 
         }
 
+    }
+
+    private static void currentPath(){
+        String currentPath = controller.getManager().getCurrentPath();
+        System.out.printf(currentPath.substring(0,currentPath.length()-1)+">");
+        // TODO: 2017/5/15 如何控制光标显示在一行的最右边
     }
 
     private static void success(String opteration){

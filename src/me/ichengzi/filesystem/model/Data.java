@@ -29,5 +29,7 @@ public interface Data {
     List<Sector> getSectorList(int[] indexs);
 
 
+    public void printTable();
+
 
 }

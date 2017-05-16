@@ -60,11 +60,12 @@ public class FAT12 implements Fat{
         Deque deque = new ArrayDeque<>();
         int currentPos = first;
         do {
-            deque.addLast(array[currentPos]);
+            deque.addLast(currentPos);
             currentPos = array[currentPos];
-        }while(array[currentPos] == Constant.CLUS_LIST_END);
+        }while(currentPos != Constant.CLUS_LIST_END);
         int[] result = new int[deque.size()];
-        for (int i = 0; i < deque.size(); i++) {
+        int len = deque.size();
+        for (int i = 0; i < len; i++) {
             result[i] = (int) deque.removeFirst();
         }
         return result;

@@ -32,7 +32,10 @@ public class DefaultItem implements Item {
     private int dir_FileSize;
 
 
-
+    /*
+        临时变量
+     */
+    private String absolutePath;
 
     public DefaultItem(byte[] bs) {
         this.bytes = bs;
@@ -43,11 +46,16 @@ public class DefaultItem implements Item {
         setDir_WrtDate(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x18,0x1A)));
         setDir_FstClus(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x1A,0x1C)));
         setDir_FileSize(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x1c,0x20)));
+
     }
 
+    /**
+     * 这里又是一个坑，dir_Name是一个固定长度的字符串，不够11位会用空格补齐
+     * @return
+     */
     @Override
     public String getDir_Name() {
-        return dir_Name;
+        return dir_Name.trim();
     }
 
     @Override
@@ -168,9 +176,15 @@ public class DefaultItem implements Item {
         bytes[0] = b;
     }
 
+
     @Override
     public String getAbsolutePath() {
-        return null;
+        return absolutePath;
+    }
+
+    @Override
+    public String setAbsolutePath(String absolutePath) {
+        return this.absolutePath = absolutePath;
     }
 
     @Override

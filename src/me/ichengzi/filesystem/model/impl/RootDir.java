@@ -70,6 +70,16 @@ public class RootDir implements Root {
         return false;
     }
 
+    @Override
+    public Item find(String name) {
+        for (Item item :items){
+            if (name.equals(item.getDir_Name()) && item.getFirstByte()!=Constant.ITEM_FIRST_DISABLED && item.getFirstByte()!=Constant.ITEM_FIRST_NOUSE){
+                return item;
+            }
+        }
+        return null;
+    }
+
 
     @Override
     public String toString() {

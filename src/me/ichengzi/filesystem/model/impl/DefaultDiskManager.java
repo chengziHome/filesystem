@@ -58,10 +58,26 @@ public class DefaultDiskManager implements DiskManager{
         return null;
     }
 
+    /**
+     * 创建文件的核心逻辑
+     * @param fileName
+     * @return
+     */
     @Override
     public boolean createFile(String fileName) {
+        Item fileItem = new DefaultItem();
+
+
+
+
+
+
+
+
         return false;
     }
+
+
 
     @Override
     public boolean createDir(String dirName) {
@@ -90,8 +106,22 @@ public class DefaultDiskManager implements DiskManager{
         disk.init();
     }
 
+
+    /**
+     * 和init刚好是相反的过程，这个要把Disk中的byte数组写到文件中区
+     */
     @Override
     public void exit() {
+        byte[] bytes = disk.getBytes();
+        try {
+            OutputStream out = new FileOutputStream(DISK_FILE_PATH);
+            out.write(bytes);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

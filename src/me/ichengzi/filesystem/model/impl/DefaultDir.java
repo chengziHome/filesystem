@@ -120,6 +120,16 @@ public class DefaultDir implements Dictionary,Item {
     }
 
     @Override
+    public boolean isRootItem() {
+        return false;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return item.getBytes();
+    }
+
+    @Override
     public String getDir_Name() {
         return item.getDir_Name();
     }

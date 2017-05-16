@@ -16,8 +16,9 @@ import java.util.Deque;
 public class FAT12 implements Fat{
 
     private byte[] bytes;
-
     private int[] array;
+
+    private int start;
 
 
     public FAT12(int secNum) {
@@ -28,9 +29,10 @@ public class FAT12 implements Fat{
      * 用于加载FAT分区的数据结构
      * @param bs
      */
-    public FAT12(byte[] bs){
+    public FAT12(byte[] bs,int start){
+        this.start = start;
         bytes = bs;
-        int arr_len = bytes.length*2/3;//可能最后的余数部分的byte不能使用了，但是也没有必要，就当废弃掉了。
+        int arr_len = (bytes.length/3)*2;//可能最后的余数部分的byte不能使用了，但是也没有必要，就当废弃掉了。
 
         array = new int[arr_len];
         for (int i = 0; i < arr_len; i++) {
@@ -105,5 +107,32 @@ public class FAT12 implements Fat{
     @Override
     public int[] getFreeClus(int len) {
         return new int[0];
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return new byte[0];
+    }
+
+
+    /**
+     * 这个方法是将高级数据结构转化为byte数组
+     */
+    @Override
+    public void store() {
+        int byte_pos = 0;
+        int int_pos = 0;
+        for (int i = 0; i < array.length / 2; i++) {
+            byte_pos = i*3;
+            int_pos = i*2;
+            bytes[byte_pos] = new Integer(array[int_pos]&0x00FF).byteValue();
+            bytes[byte_pos+1] = new Integer(((array[int_pos+2]&0x00F)<<4)&((array[int_pos]&0x0F00)>>8)).byteValue();
+            bytes[byte_pos+2] = new Integer((array[int_pos+2]&0x0FF0)>>4).byteValue();
+        }
+        //如果array是奇数
+        if (array.length%2==1){
+            // TODO: 2017/5/16 在实验中偷个懒，一般不会用到数组的最后的，
+        }
+
     }
 }

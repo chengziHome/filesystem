@@ -55,13 +55,7 @@ public class Controller {
      * @param fileName
      */
     public ReturnUtil touch(String fileName){
-        Dictionary currentDir = manager.getCurrentDictionary();
-        DefaultFile file = new DefaultFile();
-
-        // TODO: 2017/5/9 定义完DefaultFile的数据结构之后，这里还需要进一步设置
-
-        currentDir.addItem(file);
-        currentDir.store();//更新到Disk中
+        boolean b = manager.createFile(fileName);
         return ReturnUtil.success();
     }
 
@@ -220,8 +214,8 @@ public class Controller {
 
     }
     public void saveAll(){
-        Disk disk = manager.getDisk();
-        disk.store();
+        manager.getDisk().store();//收集数据
+        manager.exit();//写入文件
     }
 
 

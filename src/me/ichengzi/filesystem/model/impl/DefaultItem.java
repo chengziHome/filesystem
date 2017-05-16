@@ -31,11 +31,16 @@ public class DefaultItem implements Item {
     private int dir_FstClus;
     private int dir_FileSize;
 
+    private boolean isRoot;
 
     /*
         临时变量
      */
     private String absolutePath;
+
+
+    public DefaultItem() {
+    }
 
     public DefaultItem(byte[] bs) {
         this.bytes = bs;
@@ -47,6 +52,17 @@ public class DefaultItem implements Item {
         setDir_FstClus(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x1A,0x1C)));
         setDir_FileSize(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x1c,0x20)));
 
+    }
+
+
+    @Override
+    public boolean isRootItem() {
+        return isRoot;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return bytes;
     }
 
     /**
@@ -174,6 +190,34 @@ public class DefaultItem implements Item {
     @Override
     public void setFirstByte(byte b) {
         bytes[0] = b;
+    }
+
+
+    /**
+     * 主要是目录项会间接调用这个。
+     */
+    @Override
+    public void store() {
+        byte[] bs = Byte2String.getBytes(dir_Name);
+        for (int i = 0; i < 11; i++) {
+            bytes[i] = bs[i];
+        }
+        bytes[11] = (byte) dir_Attr;
+        byte[] bs1 = Byte2String.getBytes(reserved);
+        for (int i = 0; i < 10; i++) {
+            bytes[i+12] = bs1[i];
+        }
+        bytes[22] = new Integer(dir_WrtTime&0x00FF).byteValue();
+        bytes[23] = new Integer((dir_WrtTime&0xFF00)>>8).byteValue();
+        bytes[24] = new Integer((dir_WrtDate&0x00FF)).byteValue();
+        bytes[25] = new Integer((dir_WrtDate&0xFF00)).byteValue();
+        bytes[26] = new Integer((dir_FstClus&0x00FF)).byteValue();
+        bytes[27] = new Integer((dir_FstClus&0xFF00)).byteValue();
+        bytes[28] = new Integer(dir_FileSize&0x000000FF).byteValue();
+        bytes[29] = new Integer((dir_FstClus&0x0000FF00)>>8).byteValue();
+        bytes[30] = new Integer((dir_FstClus&0x00FF0000)>>16).byteValue();
+        bytes[31] = new Integer((dir_FstClus&0xFF000000)>>24).byteValue();
+
     }
 
 

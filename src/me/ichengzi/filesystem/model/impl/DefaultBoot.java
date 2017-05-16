@@ -551,6 +551,11 @@ public class DefaultBoot implements Boot {
         }
     }
 
+    @Override
+    public void store() {
+        throw new UnsupportedOperationException("Boot分区不会更改,不需要回写");
+    }
+
 
     @Override
     public String toString() {

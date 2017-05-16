@@ -16,4 +16,6 @@ public interface Sector {
 
     void setBytes(byte[] bs,int offset,int len);
 
+    void store();
+
 }

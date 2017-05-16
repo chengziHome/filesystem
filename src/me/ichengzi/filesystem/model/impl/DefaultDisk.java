@@ -138,11 +138,31 @@ public class DefaultDisk implements Disk {
     }
 
 
-    // TODO: 2017/5/10 load写完之后再来写store过程
+    /**
+     * @param bytes
+     * @param start
+     */
+    @Override
+    public void store(byte[] bytes,int start) {
+        for (int i = 0; i < bytes.length; i++) {
+            this.bytes[start++] = bytes[i];
+        }
+    }
 
+    /**
+     * 这个store方法是讲各个数据区的byte[]数组汇总到Disk的byte数组中
+     * 其实总共四个Root,FAT,ROOT,DATA,只有中间两个需要汇总
+     */
     @Override
     public void store() {
+        store(FAT1.getBytes(),Constant.BOOT_SECNUM*Constant.SECTOR_SIZE);
+        store(FAT2.getBytes(),(Constant.BOOT_SECNUM + boot.getBPB_FATSz16())*Constant.SECTOR_SIZE);
+        store(rootDir.getBytes(),(Constant.BOOT_SECNUM + boot.getBPB_FATSz16()*2)*Constant.SECTOR_SIZE);
+    }
 
+    @Override
+    public byte[] getBytes() {
+        return bytes;
     }
 
     // TODO: 2017/5/10 定义好各个数据类型之后再来写这里的load过程
@@ -161,8 +181,8 @@ public class DefaultDisk implements Disk {
      * @return
      */
     private Fat loadFAT(int offset,int secNum){
-        FAT1 = new FAT12(Arrays.copyOfRange(bytes,offset,offset+secNum*Constant.SECTOR_SIZE));
-        FAT2 = new FAT12(Arrays.copyOfRange(bytes,offset+secNum*Constant.SECTOR_SIZE,offset+secNum*2*Constant.SECTOR_SIZE));
+        FAT1 = new FAT12(Arrays.copyOfRange(bytes,offset,offset+secNum*Constant.SECTOR_SIZE),offset);
+        FAT2 = new FAT12(Arrays.copyOfRange(bytes,offset+secNum*Constant.SECTOR_SIZE,offset+secNum*2*Constant.SECTOR_SIZE),offset+secNum*Constant.SECTOR_SIZE);
         return null;
     }
 
@@ -172,7 +192,7 @@ public class DefaultDisk implements Disk {
     }
 
     private Data loadData(int offset){
-        data = new DefaultData(Arrays.copyOfRange(bytes,offset,max_len));
+        data = new DefaultData(Arrays.copyOfRange(bytes,offset,max_len),offset);
         return null;
     }
 

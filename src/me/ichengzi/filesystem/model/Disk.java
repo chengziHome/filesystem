@@ -29,8 +29,10 @@ public interface Disk {
     Data getDate();
     void setData(Data data);
 
+    void store(byte[] bytes,int start);
     void store();
 
+    byte[] getBytes();
 
 
 

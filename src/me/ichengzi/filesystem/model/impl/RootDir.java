@@ -21,6 +21,9 @@ import java.util.List;
 public class RootDir implements Root {
 
     private byte[] bytes;
+
+    private int start;
+
     private List<Item> items;
 
     public RootDir(int itemNum) {
@@ -78,6 +81,27 @@ public class RootDir implements Root {
             }
         }
         return null;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return new byte[0];
+    }
+
+
+    /**
+     * 将高级数据结构转化为byte数组
+     */
+    @Override
+    public void store() {
+        for (int i = 0; i < items.size(); i++) {
+            int pos = start + i * Constant.ITEM_SIZE;
+            Item item = items.get(i);
+            byte[] bs = item.getBytes();
+            for (int j = 0; j < Constant.ITEM_SIZE; j++) {
+                bytes[pos+j] = bs[j];
+            }
+        }
     }
 
 

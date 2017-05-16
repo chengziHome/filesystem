@@ -26,4 +26,21 @@ public class Byte2String {
         return new String(chars);
 
     }
+
+
+    /**
+     * 很显然和上面对应，在持久化的时候使用
+     * @param name
+     * @return
+     */
+    public static byte[] getBytes(String name){
+        char[] chars = name.toCharArray();
+        byte[] bytes = new byte[chars.length];
+        for (int i = 0; i < chars.length; i++) {
+            bytes[i] = (byte) chars[i];
+        }
+        return bytes;
+    }
+
+
 }

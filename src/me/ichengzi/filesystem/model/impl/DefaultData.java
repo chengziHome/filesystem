@@ -21,6 +21,8 @@ public class DefaultData implements Data {
 
     private byte[] bytes;
 
+    private int offset;
+
 
     //事实证明，这个数据结构太简单，不够用
 //    private Map<String,Integer[]> registeTable;
@@ -39,7 +41,8 @@ public class DefaultData implements Data {
 
     private static final DefaultDiskManager manager = DefaultDiskManager.getManager();
 
-    public DefaultData(byte[] bytes) {
+    public DefaultData(byte[] bytes,int offset) {
+        this.offset = offset;
         this.bytes = bytes;
         registeTable = new ArrayDeque<RegisteEntry>();
         //这里是个固定大小，模拟内存仅能容纳100个扇区，所以理论上下面的所有方法都不应该调用List的remove方法。
@@ -303,7 +306,17 @@ public class DefaultData implements Data {
 
     }
 
+    @Override
+    public void store() {
+        throw new UnsupportedOperationException("Data数据区已扇区为单位更新，故Data不需要持久化");
+    }
 
+
+
+    @Override
+    public int getDataOffset() {
+        return offset;
+    }
 
 
 }

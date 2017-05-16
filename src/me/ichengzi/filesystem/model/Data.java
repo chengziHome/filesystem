@@ -31,5 +31,9 @@ public interface Data {
 
     public void printTable();
 
+    void store();
+
+    int getDataOffset();
+
 
 }

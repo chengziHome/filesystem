@@ -58,6 +58,8 @@ public interface Boot {
     int getBoot_end();
     void setBoot_end(int end);
 
+    void store();
+
     String toString();
 
 }

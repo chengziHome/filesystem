@@ -18,5 +18,7 @@ public interface Root {
     Item find(String name);
 
 
+    byte[] getBytes();
+    void store();
 
 }

@@ -71,6 +71,16 @@ public class DefaultFile implements File,Item{
     }
 
     @Override
+    public boolean isRootItem() {
+        return false;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return item.getBytes();
+    }
+
+    @Override
     public String getDir_Name() {
         return item.getDir_Name();
     }
@@ -166,6 +176,11 @@ public class DefaultFile implements File,Item{
     @Override
     public void setFirstByte(byte b) {
         item.setFirstByte(b);
+    }
+
+    @Override
+    public void store() {
+
     }
 
     @Override

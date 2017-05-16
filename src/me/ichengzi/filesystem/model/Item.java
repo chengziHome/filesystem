@@ -13,6 +13,9 @@ import java.util.List;
  */
 public interface Item {
 
+
+    boolean isRootItem();
+    byte[] getBytes();
     /*
     目录项属性
      */
@@ -38,6 +41,9 @@ public interface Item {
 
     byte getFirstByte();
     void setFirstByte(byte b);
+
+
+    void store();
 
 
     /*

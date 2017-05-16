@@ -15,16 +15,13 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        System.out.println(0x4a);
-        System.out.println((byte)0xaa);
-        System.out.println((0x4AAA&0x000001E0)>>5);
+        Integer i = new Integer(128);
+        Integer integer = new Integer(255);
+        System.out.println(i.byteValue());
+        System.out.println(integer.byteValue());
 
-        System.out.println("/a".split("/").length);
-        System.out.println("/   ".split("/").length);
-
-        List<String> list = new ArrayList<String>(100);
-        System.out.println(list.get(10));
-
+        byte b = (byte) 0xFF;
+        System.out.println(b);
 
     }
 

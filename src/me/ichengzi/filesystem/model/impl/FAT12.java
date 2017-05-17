@@ -136,8 +136,15 @@ public class FAT12 implements Fat{
             byte_pos = i*3;
             int_pos = i*2;
             bytes[byte_pos] = new Integer(array[int_pos]&0x00FF).byteValue();
-            bytes[byte_pos+1] = new Integer(((array[int_pos+2]&0x00F)<<4)&((array[int_pos]&0x0F00)>>8)).byteValue();
-            bytes[byte_pos+2] = new Integer((array[int_pos+2]&0x0FF0)>>4).byteValue();
+            int high = (array[int_pos+1]&0x00F)<<4;
+            int low = (array[int_pos]&0x0F00)>>8;
+            int res = high|low;
+            byte b = new Integer(res).byteValue();
+            bytes[byte_pos+1] = b;
+
+
+//            bytes[byte_pos+1] = new Integer(((array[int_pos+1]&0x00F)<<4)&((array[int_pos]&0x0F00)>>8)).byteValue();
+            bytes[byte_pos+2] = new Integer((array[int_pos+1]&0x0FF0)>>4).byteValue();
         }
         //如果array是奇数
         if (array.length%2==1){

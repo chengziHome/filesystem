@@ -171,33 +171,33 @@ public class DefaultData implements Data {
      */
     @Override
     public int addFile(Item file) {
-        int[] indexs = null;
-        if ((indexs = manager.getFAT1().getFreeClus(1))!=null){//有空闲空间
-            Sector sector = new DefaultSector(new byte[Constant.SECTOR_SIZE]);
-            List<Sector> sectors = new ArrayList<>();
-            sectors.add(sector);
-            store(indexs,sectors);
-            load(file);
-            Dictionary currentDir = manager.getCurrentDictionary();
-            currentDir.addItem(file);
-            currentDir.store();
-        }
+//        int[] indexs = null;
+//        if ((indexs = manager.getFAT1().getFreeClus(1))!=null){//有空闲空间
+//            Sector sector = new DefaultSector(new byte[Constant.SECTOR_SIZE]);
+//            List<Sector> sectors = new ArrayList<>();
+//            sectors.add(sector);
+//            store(indexs,sectors);
+//            load(file);
+//            Dictionary currentDir = manager.getCurrentDictionary();
+//            currentDir.addItem(file);
+//            currentDir.store();
+//        }
         return -1;
     }
 
     @Override
     public int[] addDir(Item dir) {
-        int[] indexs = null;
-        if ((indexs = manager.getFAT1().getFreeClus(1))!=null){//有空闲空间
-            Sector sector = new DefaultSector(new byte[Constant.SECTOR_SIZE]);
-            List<Sector> sectors = new ArrayList<>();
-            sectors.add(sector);
-            store(indexs,sectors);
-            load(dir);
-            Dictionary currentDir = manager.getCurrentDictionary();
-            currentDir.addItem(dir);
-            currentDir.store();
-        }
+//        int[] indexs = null;
+//        if ((indexs = manager.getFAT1().getFreeClus(1))!=null){//有空闲空间
+//            Sector sector = new DefaultSector(new byte[Constant.SECTOR_SIZE]);
+//            List<Sector> sectors = new ArrayList<>();
+//            sectors.add(sector);
+//            store(indexs,sectors);
+//            load(dir);
+//            Dictionary currentDir = manager.getCurrentDictionary();
+//            currentDir.addItem(dir);
+//            currentDir.store();
+//        }
         return null;
     }
 
@@ -228,7 +228,7 @@ public class DefaultData implements Data {
             byte[] bytes = DefaultDiskManager.getManager().getDisk().getBytes();
             int copy_start = offset+(index-2)*Constant.SECTOR_SIZE;
             int copy_end = offset+(index-1)*Constant.SECTOR_SIZE;
-            Sector sector = new DefaultSector(Arrays.copyOfRange(bytes,copy_start,copy_end));
+            Sector sector = new DefaultSector(Arrays.copyOfRange(bytes,copy_start,copy_end),index);
             result.add(sector);
         }
 
@@ -322,7 +322,7 @@ public class DefaultData implements Data {
     public void initFileSector(int[] indexs) {
         for (int i = 0; i < indexs.length; i++) {
             int sec_num = indexs[i];
-            int start = offset + sec_num*Constant.SECTOR_SIZE;
+            int start = offset + (sec_num-2)*Constant.SECTOR_SIZE;
             DefaultDiskManager.getManager().getDisk().store(new byte[Constant.SECTOR_SIZE],start);
         }
     }
@@ -330,11 +330,34 @@ public class DefaultData implements Data {
 
     @Override
     public void initDirSector(int[] indexs) {
-        // TODO: 2017/5/17 实际上这里的逻辑应该和文件是不一样的，因为存在本目录和上层目录选项在第一个扇区里面
-        for (int i = 0; i < indexs.length; i++) {
+        /*
+            目录的第一个扇区不为空，有两个目录项.
+            这里简单起见，直接操作一个32长度的byte数组
+         */
+        byte[] currentItem = new byte[Constant.ITEM_SIZE];
+        currentItem[0] = Constant.CURRENT_ITEM_NAME;
+        for (int i = 1; i < 11; i++) {
+            currentItem[i]  = Constant.BLANK_SPACE;
+        }
+        currentItem[11] = Constant.ITEM_ATTR_DIR;
+        byte[] fatherItem = new byte[Constant.ITEM_SIZE];
+        fatherItem[0] = Constant.CURRENT_ITEM_NAME;
+        fatherItem[1] = Constant.CURRENT_ITEM_NAME;
+        for (int i = 2; i < 11; i++) {
+            fatherItem[i] = Constant.BLANK_SPACE;
+        }
+        fatherItem[11] = Constant.ITEM_ATTR_DIR;
+        // TODO: 2017/5/17 时间暂时不做处理
+        byte[] fst_Sec = new byte[Constant.SECTOR_SIZE];
+        System.arraycopy(currentItem,0,fst_Sec,0,Constant.ITEM_SIZE);
+        System.arraycopy(fatherItem,0,fst_Sec,Constant.ITEM_SIZE,Constant.ITEM_SIZE);
+
+        DefaultDiskManager.getManager().getDisk().store(fst_Sec,offset+(indexs[0]-2)*Constant.SECTOR_SIZE);
+        for (int i = 1; i < indexs.length; i++) {
+            byte[] initBytes = new byte[Constant.SECTOR_SIZE];
             int sec_num = indexs[i];
-            int start = offset + sec_num*Constant.SECTOR_SIZE;
-            DefaultDiskManager.getManager().getDisk().store(new byte[Constant.SECTOR_SIZE],start);
+            int start = offset + (sec_num-2)*Constant.SECTOR_SIZE;
+            DefaultDiskManager.getManager().getDisk().store(initBytes,start);
         }
 
     }

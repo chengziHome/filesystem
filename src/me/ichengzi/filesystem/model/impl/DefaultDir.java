@@ -77,14 +77,14 @@ public class DefaultDir implements Dictionary,Item {
     public List<Item> getItems() {
         loadSectors();//更新items属性
 
-        List<Item> result = new ArrayList<>();
-        for (Item item:items){
-            if (item.getFirstByte()==Constant.ITEM_FIRST_NOUSE || item.getFirstByte() == Constant.ITEM_FIRST_DISABLED)
-                continue;
-            result.add(item);
-        }
-        return items;
+    List<Item> result = new ArrayList<>();
+    for (Item item:items){
+        if (item.getFirstByte()==Constant.ITEM_FIRST_NOUSE || item.getFirstByte() == Constant.ITEM_FIRST_DISABLED)
+            continue;
+        result.add(item);
     }
+    return items;
+}
 
     @Override
     public void addItem(Item item) {

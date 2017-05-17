@@ -18,9 +18,18 @@ public class DefaultSector implements Sector {
     private byte[] bytes;
 
     //注意这里不是绝对偏移，而是数据区的扇区索引，直接从FAT数组中得到的结果
-    private int sec_start;
+    private int sec_num;
 
-    public DefaultSector(byte[] bytes) {
+    public int getSec_num() {
+        return sec_num;
+    }
+
+    public void setSec_num(int sec_num) {
+        this.sec_num = sec_num;
+    }
+
+    public DefaultSector(byte[] bytes,int sec_num) {
+        this.sec_num = sec_num;
         this.bytes = bytes;
     }
 
@@ -51,7 +60,7 @@ public class DefaultSector implements Sector {
     public void store() {
         Disk disk = DefaultDiskManager.getManager().getDisk();
         int dataOffset = disk.getDate().getDataOffset();
-        disk.store(bytes,dataOffset+sec_start*Constant.SECTOR_SIZE);
+        disk.store(bytes,dataOffset+(sec_num-2)*Constant.SECTOR_SIZE);
 
     }
 

@@ -120,6 +120,7 @@ public class DefaultDiskManager implements DiskManager{
                 return ReturnUtil.error("根目录下的目录项已经达到上限");
         }
         int[] indexs = getFAT1().getFreeClus(1);
+        getFAT1().store();
         if (indexs==null){
             return ReturnUtil.error("磁盘已满，无可用空间");
         }
@@ -143,12 +144,8 @@ public class DefaultDiskManager implements DiskManager{
             getRoot().store();
         }else{
             Dictionary currentDir = getCurrentDictionary();
-            if (currentDir.hasAvailable()){
-                currentDir.addItem(dirItem);
-                currentDir.store();
-            }else{
-                // TODO: 2017/5/17 需要给目录项添页的逻辑还没有写
-            }
+            currentDir.addItem(dirItem);
+            currentDir.store();
         }
 
         getData().removeItem(getCurrentPath());

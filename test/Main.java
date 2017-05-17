@@ -16,17 +16,13 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        Integer i = new Integer(128);
-        Integer integer = new Integer(255);
-        System.out.println(i.byteValue());
-        System.out.println(integer.byteValue());
 
-        byte b = (byte) 0xFF;
-        System.out.println(b);
+        int a = 0xF0;
+        int b = 0x0F;
 
-        System.out.println(Integer.toHexString(16896));
+        System.out.println(a|b);
         System.out.println(Integer.parseInt("4200",16));
-
+        System.out.println(16896+11*512);
 
     }
 

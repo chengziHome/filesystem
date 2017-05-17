@@ -108,7 +108,7 @@ public class RootDir implements Root {
 
     @Override
     public byte[] getBytes() {
-        return new byte[0];
+        return bytes;
     }
 
 

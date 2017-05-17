@@ -65,13 +65,8 @@ public class Controller {
      * @param dirName
      */
     public ReturnUtil mkdir(String dirName){
-        Dictionary currentDir = manager.getCurrentDictionary();
-        DefaultDir dir = new DefaultDir();
-        // TODO: 2017/5/9 等DefaultDir的数据结构定义完之后，这里还要进一步设置
-        currentDir.addItem(dir);
-        currentDir.store();
-
-        return ReturnUtil.success();
+        ReturnUtil result = manager.createDir(dirName);
+        return result;
     }
 
     /**

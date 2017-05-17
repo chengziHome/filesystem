@@ -77,7 +77,6 @@ public class Main {
                     }else{
                         String dirName = cmds[1];
                         controller.mkdir(dirName);
-                        // TODO: 2017/5/9 目录的数据结构和文件的数据结构是不一样的
                     }
                     break;
                 case "rm":

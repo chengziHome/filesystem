@@ -318,15 +318,27 @@ public class DefaultData implements Data {
         return offset;
     }
 
-
     @Override
-    public void initSector(int[] indexs) {
+    public void initFileSector(int[] indexs) {
         for (int i = 0; i < indexs.length; i++) {
             int sec_num = indexs[i];
             int start = offset + sec_num*Constant.SECTOR_SIZE;
             DefaultDiskManager.getManager().getDisk().store(new byte[Constant.SECTOR_SIZE],start);
         }
     }
+
+
+    @Override
+    public void initDirSector(int[] indexs) {
+        // TODO: 2017/5/17 实际上这里的逻辑应该和文件是不一样的，因为存在本目录和上层目录选项在第一个扇区里面
+        for (int i = 0; i < indexs.length; i++) {
+            int sec_num = indexs[i];
+            int start = offset + sec_num*Constant.SECTOR_SIZE;
+            DefaultDiskManager.getManager().getDisk().store(new byte[Constant.SECTOR_SIZE],start);
+        }
+
+    }
+
 
     /**
      * 删除掉注册表和扇区链表中某个item项的记录，

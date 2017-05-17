@@ -35,7 +35,8 @@ public interface Data {
 
     int getDataOffset();
 
-    void initSector(int[] indexs);
+    void initFileSector(int[] indexs);
+    void initDirSector(int[] indexs);
     void removeItem(String absolute);
 
 

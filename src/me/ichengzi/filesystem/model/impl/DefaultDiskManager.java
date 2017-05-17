@@ -75,7 +75,7 @@ public class DefaultDiskManager implements DiskManager{
         if (indexs==null){
             return ReturnUtil.error("磁盘已满，无可用空间");
         }
-        getData().initSector(indexs);
+        getData().initFileSector(indexs);
 
         Item fileItem = new DefaultItem();
 
@@ -110,9 +110,52 @@ public class DefaultDiskManager implements DiskManager{
     }
 
 
-
+    /**
+     * 创造目录和文件大体上是完全相同的，仅仅是扇区的初始化方式不同
+     * @param dirName
+     * @return
+     */
     @Override
     public ReturnUtil createDir(String dirName) {
+
+        if ("/".equals(getCurrentPath())){
+            if (!getRoot().hasAvailable())
+                return ReturnUtil.error("根目录下的目录项已经达到上限");
+        }
+        int[] indexs = getFAT1().getFreeClus(1);
+        if (indexs==null){
+            return ReturnUtil.error("磁盘已满，无可用空间");
+        }
+        getData().initDirSector(indexs);
+
+        Item dirItem = new DefaultItem();
+
+        dirItem.setDir_Name(dirName);
+        dirItem.setDir_Attr(Constant.ITEM_ATTR_DIR);
+        dirItem.setReserve("");
+
+        // TODO: 2017/5/17 设置时间还是有点麻烦
+        dirItem.setDir_WrtTime(0x00007648);
+        dirItem.setDir_WrtDate(0x00004AAc);
+        dirItem.setDir_FstClus(indexs[0]);
+        dirItem.setDir_FileSize(0);
+
+        dirItem.store();
+        if ("/".equals(getCurrentPath())){
+            getRoot().addItem(dirItem);
+            getRoot().store();
+        }else{
+            Dictionary currentDir = getCurrentDictionary();
+            if (currentDir.hasAvailable()){
+                currentDir.addItem(dirItem);
+                currentDir.store();
+            }else{
+                // TODO: 2017/5/17 需要给目录项添页的逻辑还没有写
+            }
+        }
+
+        getData().removeItem(getCurrentPath());
+
         return ReturnUtil.success();
     }
 

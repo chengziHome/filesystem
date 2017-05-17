@@ -181,7 +181,7 @@ public class Controller {
 
 
                     if (son == null) {
-                        return ReturnUtil.error("未找到目录：" + son.getDir_Name());
+                        return ReturnUtil.error("未找到目录：" + paths[i]);
                     } else if (son.getDir_Attr() == Constant.ITEM_ATTR_FILE) {
                         return ReturnUtil.error("目录项" + son.getDir_Name() + "是文件，非目录");
                     } else {

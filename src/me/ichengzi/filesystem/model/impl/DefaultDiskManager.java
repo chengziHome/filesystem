@@ -23,7 +23,7 @@ public class DefaultDiskManager implements DiskManager{
     private Deque<Item> currentPathStack;
 
 
-    private static final String DISK_FILE_PATH = "E:/fat/filesys2.flp";
+    private static final String DISK_FILE_PATH = "E:/fat/filesys1.flp";
 
 
     /**

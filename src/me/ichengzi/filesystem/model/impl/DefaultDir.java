@@ -105,7 +105,7 @@ public class DefaultDir implements Dictionary,Item {
     @Override
     public Item find(String name) {
         for(Item item:items){
-            if (item.getDir_Name() == name){
+            if (name.equals(item.getDir_Name())){
                 return item;
             }
         }

@@ -67,7 +67,6 @@ public class DefaultData implements Data {
     @Override
     public int[] search(Item item) {
         String absolutePath = item.getAbsolutePath();
-
         for (RegisteEntry entry:registeTable){
             String str1 = entry.getAbsolutePath();
             if (str1.equals(absolutePath)){
@@ -352,6 +351,7 @@ public class DefaultData implements Data {
         for (RegisteEntry entry:registeTable){
             if (absolute.equals(entry.getAbsolutePath())){
                 indexs = entry.getIndexs();
+                registeTable.remove(entry);
                 break;
             }
         }

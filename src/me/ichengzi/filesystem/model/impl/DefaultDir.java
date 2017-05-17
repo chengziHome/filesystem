@@ -1,6 +1,7 @@
 package me.ichengzi.filesystem.model.impl;
 
 import com.sun.jmx.mbeanserver.DefaultMXBeanMappingFactory;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import me.ichengzi.filesystem.model.Dictionary;
 import me.ichengzi.filesystem.model.Item;
 import me.ichengzi.filesystem.model.Sector;
@@ -92,13 +93,17 @@ public class DefaultDir implements Dictionary,Item {
             byte firstByte = tmp.getFirstByte();
             if(firstByte == Constant.ITEM_FIRST_DISABLED || firstByte == Constant.ITEM_FIRST_NOUSE){
                 items.add(i,item);
+                //要把该item处修改对应的byte数组投射到对应的扇区上
+                int a = i/Constant.SECTOR_SIZE;
+                int b = i%Constant.SECTOR_SIZE;
+                Sector sector = sectors.get(a);
+                sector.setBytes(item.getBytes(),b* Constant.ITEM_SIZE);
                 return;
             }
+
         }
 
-        // TODO: 2017/5/11 要加入一个新的扇区
-
-
+        // TODO: 2017/5/11 要加入一个新的扇区的逻辑还没有写
 
     }
 
@@ -112,13 +117,16 @@ public class DefaultDir implements Dictionary,Item {
         return null;
     }
 
+
     @Override
     public void delete(Item item) {
-        for (Item tmp:items){
-            if(tmp.getDir_Name() == item.getDir_Name()){
-                tmp.setFirstByte((byte) 0xE5);
-            }
-        }
+        throw new UnsupportedOperationException("暂不使用这个方法");
+//        for (Item tmp:items){
+//            if(tmp.getDir_Name() == item.getDir_Name()){
+//                tmp.setFirstByte((byte) 0xE5);
+//            }
+//
+//        }
     }
 
     /**
@@ -131,6 +139,11 @@ public class DefaultDir implements Dictionary,Item {
             Item item = items.get(i);
             if (name.equals(item.getDir_Name())){
                 item.setFirstByte(Constant.ITEM_FIRST_DISABLED);
+                int a = i/Constant.SECTOR_SIZE;
+                int b = i%Constant.SECTOR_SIZE;
+                Sector sector = sectors.get(a);
+                sector.setBytes(item.getBytes(),b* Constant.ITEM_SIZE);
+                return;
             }
         }
 
@@ -140,8 +153,21 @@ public class DefaultDir implements Dictionary,Item {
 
     }
 
+
+    /**
+     * 注意这里的store方法有两个任务：
+     * 1，items高级数据结构转化到sectors的数组里面
+     * 2,依次调用sectors里面的store方法。
+     *
+     *
+     */
     @Override
     public void store() {
+
+        /*
+            但是又想，其实任务一应该放在addItem和deleteItem方法里面
+         */
+
         for (int i = 0; i < sectors.size(); i++) {
             Sector sector = sectors.get(i);
             sector.store();

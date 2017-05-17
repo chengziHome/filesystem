@@ -14,7 +14,7 @@ public interface Sector {
     byte[] getBytes();
     byte[] getBytes(int offset,int end);
 
-    void setBytes(byte[] bs,int offset,int len);
+    void setBytes(byte[] bs,int offset);
 
     void store();
 

@@ -37,8 +37,8 @@ public class DefaultSector implements Sector {
     }
 
     @Override
-    public void setBytes(byte[] bs, int offset, int len) {
-        for (int i = 0; i < len; i++) {
+    public void setBytes(byte[] bs, int offset) {
+        for (int i = 0; i < bs.length; i++) {
             bytes[offset++] = bs[i];
         }
     }

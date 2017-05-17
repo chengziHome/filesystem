@@ -8,6 +8,7 @@ import me.ichengzi.filesystem.util.ReturnUtil;
 import java.io.*;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -96,16 +97,8 @@ public class DefaultDiskManager implements DiskManager{
             getRoot().store();
         }else{
             Dictionary currentDir = getCurrentDictionary();
-            if (currentDir.hasAvailable()){
-                currentDir.addItem(fileItem);
-                currentDir.store();
-            }else{
-                // TODO: 2017/5/17 需要给目录项添页的逻辑还没有写，
-                /*
-                    注意：这里新添加的扇区要添加在链表尾部，而不是重新申请一块链表，
-                    因为重新申请回更加的麻烦，还要更改当前目录本身的Item想的fst_sec属性。
-                 */
-            }
+            currentDir.addItem(fileItem);//注意，需要添加新扇区的操作聚合在addItem方法里面
+            currentDir.store();
         }
 
         getData().removeItem(getCurrentPath());
@@ -258,7 +251,9 @@ public class DefaultDiskManager implements DiskManager{
             return "/";
         }
         StringBuilder sb = new StringBuilder();
-        for (Item item:currentPathStack){
+        Iterator<Item> iterator = currentPathStack.descendingIterator();
+        while(iterator.hasNext()){
+            Item item = iterator.next();
             sb.append("/").append(item.getDir_Name());
         }
         sb.append("/");
@@ -302,8 +297,12 @@ public class DefaultDiskManager implements DiskManager{
     @Override
     public Deque<Item> copyCurrentPathStack() {
         Deque<Item> copyStack = new ArrayDeque<>();
+        /*
+            有个细节，deque作为栈的时候，push是addFirst，就是说低索引处是栈顶。
+            而默认迭代又是从低索引开始的，特别小心这个顺序
+         */
         for (Item item:currentPathStack){
-            copyStack.push(item);
+            copyStack.addLast(item);
         }
         return copyStack;
     }

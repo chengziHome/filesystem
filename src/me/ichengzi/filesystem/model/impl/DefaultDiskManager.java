@@ -159,8 +159,26 @@ public class DefaultDiskManager implements DiskManager{
         return ReturnUtil.success();
     }
 
+
     @Override
     public ReturnUtil remove(String file) {
+        int[] fat_indexs = null;
+        if ("/".equals(getCurrentPath())){
+            int fstClus = getRoot().find(file).getDir_FstClus();
+            fat_indexs = getFAT1().getClusList(fstClus);
+            getRoot().remove(file);
+        }else{
+            Dictionary currentDir = getCurrentDictionary();
+            int fstClus = currentDir.find(file).getDir_FstClus();
+            fat_indexs = getFAT1().getClusList(fstClus);
+            currentDir.remove(file);
+        }
+        getFAT1().freeClusList(fat_indexs);
+        //删除缓存,目录文件一并处理，不冲突
+        getData().removeItem(getCurrentPath()+file);
+        getData().removeItem(getCurrentPath()+file+"/");
+
+
         return ReturnUtil.success();
     }
 

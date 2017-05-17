@@ -17,7 +17,7 @@ public interface Root {
     boolean addItem(Item item);
     Item find(String name);
     boolean hasAvailable();
-
+    void remove(String name);
 
     byte[] getBytes();
     void store();

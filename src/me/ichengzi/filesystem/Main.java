@@ -87,7 +87,6 @@ public class Main {
                     }else{
                         String name = cmds[1];
                         controller.remove(name);
-                        // TODO: 2017/5/9
                     }
                     break;
                 case "list":

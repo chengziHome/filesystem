@@ -107,6 +107,18 @@ public class FAT12 implements Fat{
         return result;
     }
 
+
+    /**
+     * 释放一个簇链表
+     * @param indexs
+     */
+    @Override
+    public void freeClusList(int[] indexs) {
+        for (int i = 0; i < indexs.length; i++) {
+            array[indexs[i]] = 0;
+        }
+    }
+
     @Override
     public byte[] getBytes() {
         return bytes;

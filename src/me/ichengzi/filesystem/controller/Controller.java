@@ -74,15 +74,8 @@ public class Controller {
      * @param name
      */
     public ReturnUtil remove(String name){
-        Dictionary currentDir = manager.getCurrentDictionary();
-        Item item = currentDir.find(name);
-        if (item == null){
-            return ReturnUtil.error("未找到指定文件或目录");
-        }
-        currentDir.delete(item);
-        currentDir.store();
-
-        return ReturnUtil.success();
+        ReturnUtil result = manager.remove(name);
+        return result;
     }
 
 
@@ -93,9 +86,8 @@ public class Controller {
     public ReturnUtil list(){
         List<Item> items = null;
         if ("/".equals(manager.getCurrentPath())){
-            Disk disk = manager.getDisk();
-            Root rootDir = disk.getRoot();
 
+            Root rootDir = manager.getRoot();
             items = rootDir.getItems();
     }else{
         items = manager.getCurrentDictionary().getItems();

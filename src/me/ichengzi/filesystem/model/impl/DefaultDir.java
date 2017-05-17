@@ -104,6 +104,25 @@ public class DefaultDir implements Dictionary,Item {
         }
     }
 
+    /**
+     * 除了删除表项 ，并且持久化之外，还要报缓存清空
+     * @param name
+     */
+    @Override
+    public void remove(String name) {
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            if (name.equals(item.getDir_Name())){
+                item.setFirstByte(Constant.ITEM_FIRST_DISABLED);
+            }
+        }
+
+
+
+
+
+    }
+
     @Override
     public void store() {
         for (int i = 0; i < sectors.size(); i++) {

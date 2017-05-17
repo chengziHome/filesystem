@@ -53,7 +53,7 @@ public class RootDir implements Root {
                 continue;
             result.add(item);
         }
-        return items;
+        return result;
     }
 
     /**
@@ -91,6 +91,19 @@ public class RootDir implements Root {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void remove(String name) {
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            if (name.equals(item.getDir_Name())){
+                item.setFirstByte(Constant.ITEM_FIRST_DISABLED);
+                //这里不能执行item.store，会把刚刚修改的首位byte覆盖掉
+//                item.store();
+                store();
+            }
+        }
     }
 
     @Override

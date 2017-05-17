@@ -23,7 +23,7 @@ public class DefaultDiskManager implements DiskManager{
     private Deque<Item> currentPathStack;
 
 
-    private static final String DISK_FILE_PATH = "E:/fat/filesys1.flp";
+    private static final String DISK_FILE_PATH = "E:/fat/filesys2.flp";
 
 
     /**
@@ -100,7 +100,11 @@ public class DefaultDiskManager implements DiskManager{
                 currentDir.addItem(fileItem);
                 currentDir.store();
             }else{
-                // TODO: 2017/5/17 需要给目录项添页的逻辑还没有写
+                // TODO: 2017/5/17 需要给目录项添页的逻辑还没有写，
+                /*
+                    注意：这里新添加的扇区要添加在链表尾部，而不是重新申请一块链表，
+                    因为重新申请回更加的麻烦，还要更改当前目录本身的Item想的fst_sec属性。
+                 */
             }
         }
 
@@ -196,7 +200,11 @@ public class DefaultDiskManager implements DiskManager{
 
     @Override
     public void init() {
-        disk.init();
+        try {
+            disk.init();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface Disk {
 
-    void init();
+    void init() throws IOException;
     void format();
 
     Boot getBoot();

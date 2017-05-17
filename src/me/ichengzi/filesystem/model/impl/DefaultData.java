@@ -70,8 +70,7 @@ public class DefaultData implements Data {
 
         for (RegisteEntry entry:registeTable){
             String str1 = entry.getAbsolutePath();
-            String str2 = item.getAbsolutePath();
-            if (str1.equals(str2)){
+            if (str1.equals(absolutePath)){
                 return entry.getIndexs();
             }
         }
@@ -217,7 +216,7 @@ public class DefaultData implements Data {
 
     /**
      * 从byte数组中加载Sector对象的数组，
-     * 要注意，这里索引从1开始，就是说byte数组的第一组的索引是1
+     * 要注意，这里索引从2开始，就是说byte数组的第一组的索引是2
      * @param indexs
      * @return
      */
@@ -228,7 +227,9 @@ public class DefaultData implements Data {
         for (int i = 0; i < indexs.length; i++) {
             int index = indexs[i];
             byte[] bytes = DefaultDiskManager.getManager().getDisk().getBytes();
-            Sector sector = new DefaultSector(Arrays.copyOfRange(bytes,offset+(index-1)*Constant.SECTOR_SIZE,offset+index*Constant.SECTOR_SIZE));
+            int copy_start = offset+(index-2)*Constant.SECTOR_SIZE;
+            int copy_end = offset+(index-1)*Constant.SECTOR_SIZE;
+            Sector sector = new DefaultSector(Arrays.copyOfRange(bytes,copy_start,copy_end));
             result.add(sector);
         }
 

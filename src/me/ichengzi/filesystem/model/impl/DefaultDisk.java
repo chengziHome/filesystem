@@ -46,24 +46,32 @@ public class DefaultDisk implements Disk {
         /*
             1.Load过程
          */
+        InputStream in = null;
         try {
             File file = new File(diskPath);
-            InputStream in = new FileInputStream(file);
+            in = new FileInputStream(file);
             bytes = new byte[Constant.DISK_TOTAL_SIZE];
             int pos = 0;
             int len = 0;
             byte[] tmp = new byte[1024 * 10];
             while((len = in.read(tmp))!=-1){
-                for (int i = pos; i < len; i++) {
+                for (int i = 0; i < len; i++) {
                     bytes[pos+i] = tmp[i];
                 }
                 pos += len;
             }
-            System.out.println("bytes:"+Arrays.toString(Arrays.copyOfRange(bytes,0x2800,0x2820)));
+            System.out.println("bytes:"+Arrays.toString(Arrays.copyOfRange(bytes,0x0000,0x200)));
             max_len = pos+1;
         } catch (IOException e) {
             e.printStackTrace();
-
+        }finally {
+            if (in!=null){
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         /*
             2.创建内部数据结构
@@ -75,6 +83,27 @@ public class DefaultDisk implements Disk {
         loadFAT(Constant.BOOT_SECNUM*Constant.SECTOR_SIZE,FAT_SecNum);
         loadRootDir((Constant.BOOT_SECNUM+FAT_SecNum*2)* Constant.SECTOR_SIZE,Constant.ROOT_ITEMNUM);
         loadData((Constant.BOOT_SECNUM+FAT_SecNum*2)* Constant.SECTOR_SIZE+Constant.ROOT_ITEMNUM*Constant.ITEM_SIZE);
+
+
+        /**
+         * 测试使用，看看读进来的到底是什么东西
+         */
+
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream("E:/fat/result.flp");
+            out.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (out!=null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
     }
 

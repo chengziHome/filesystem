@@ -130,7 +130,6 @@ public class Main {
                     测试工具
                  */
                 case "pwd":
-
                     if (!controller.hasInitialized()){
                         initError();
                     }else{
@@ -140,6 +139,20 @@ public class Main {
 
                     }
 
+                    break;
+                case "pb":
+                    if (!controller.hasInitialized()){
+                        initError();
+                    }else{
+                        int start = Integer.parseInt(cmds[1],16);
+                        int end = Integer.parseInt(cmds[2],16);
+                        byte[] bs = controller.getManager().getDisk().getBytes();
+
+                        for (int i = start; i <=end; i++) {
+                            System.out.printf(bs[i]+",");
+                        }
+
+                    }
                     break;
             }
 
@@ -192,6 +205,7 @@ public class Main {
 
 
     private static void printDirList(List<Item> items){
+        // TODO: 2017/5/17 打印目录的格式细节到最后再修改
         if (!items.isEmpty()){
             for (Item item:items){
                 System.out.printf("%-12s%-12s<DIR>%-12s  %-30s\n",item.getFormatDate(),item.getFormatTime(),"",item.getDir_Name());

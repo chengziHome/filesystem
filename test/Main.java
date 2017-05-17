@@ -1,3 +1,4 @@
+import me.ichengzi.filesystem.util.Constant;
 import sun.util.resources.cldr.aa.CalendarData_aa_ER;
 
 import java.io.*;
@@ -22,6 +23,10 @@ public class Main {
 
         byte b = (byte) 0xFF;
         System.out.println(b);
+
+        System.out.println(Integer.toHexString(16896));
+        System.out.println(Integer.parseInt("4200",16));
+
 
     }
 

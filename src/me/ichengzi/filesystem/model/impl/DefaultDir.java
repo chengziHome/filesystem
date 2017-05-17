@@ -36,6 +36,10 @@ public class DefaultDir implements Dictionary,Item {
 
     public DefaultDir(Item item) {
         this.item = item;
+        loadSectors();
+    }
+
+    private void loadSectors(){
         sectors = manager.getData().load(this.item);
         byte[] tmp = new byte[Constant.SECTOR_SIZE * sectors.size()];
         for (int i = 0; i < sectors.size(); i++) {
@@ -50,15 +54,28 @@ public class DefaultDir implements Dictionary,Item {
             items.add(item1);
             pos += Constant.ITEM_SIZE;
         }
+
     }
+
+
 
     @Override
     public Item getItem() {
-        return null;
+        return item;
     }
 
+
+    /**
+     * 每次获取目录的Items项的时候，都要是从扇区中提取加载。
+     * 不要误以为这里没有做缓存，缓存是坐在Data的扇区表里面的，
+     * 这里的过程有点类似于真实场景中的“编码解码”过程。
+     * 所以这个方法名字虽然叫getItems但事实上每次items都要去更新,相当于每一次都要初始化
+     * @return
+     */
     @Override
     public List<Item> getItems() {
+        loadSectors();//更新items属性
+
         List<Item> result = new ArrayList<>();
         for (Item item:items){
             if (item.getFirstByte()==Constant.ITEM_FIRST_NOUSE || item.getFirstByte() == Constant.ITEM_FIRST_DISABLED)

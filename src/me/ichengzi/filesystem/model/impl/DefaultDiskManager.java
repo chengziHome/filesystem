@@ -2,6 +2,8 @@ package me.ichengzi.filesystem.model.impl;
 
 import me.ichengzi.filesystem.model.*;
 import me.ichengzi.filesystem.model.File;
+import me.ichengzi.filesystem.util.Constant;
+import me.ichengzi.filesystem.util.ReturnUtil;
 
 import java.io.*;
 import java.util.ArrayDeque;
@@ -64,29 +66,59 @@ public class DefaultDiskManager implements DiskManager{
      * @return
      */
     @Override
-    public boolean createFile(String fileName) {
+    public ReturnUtil createFile(String fileName) {
+        if ("/".equals(getCurrentPath())){
+            if (!getRoot().hasAvailable())
+                return ReturnUtil.error("根目录下的目录项已经达到上限");
+        }
+        int[] indexs = getFAT1().getFreeClus(1);
+        if (indexs==null){
+            return ReturnUtil.error("磁盘已满，无可用空间");
+        }
+        getData().initSector(indexs);
+
         Item fileItem = new DefaultItem();
 
+        // TODO: 2017/5/17 文件名在长度和扩展名方面还有BUG待改善
+        fileItem.setDir_Name(fileName);
+        fileItem.setDir_Attr(Constant.ITEM_ATTR_FILE);
+        fileItem.setReserve("");
 
+        // TODO: 2017/5/17 设置时间还是有点麻烦
+        fileItem.setDir_WrtTime(0x00007648);
+        fileItem.setDir_WrtDate(0x00004AAc);
+        fileItem.setDir_FstClus(indexs[0]);
+        fileItem.setDir_FileSize(0);
 
+        fileItem.store();
+        if ("/".equals(getCurrentPath())){
+            getRoot().addItem(fileItem);
+            getRoot().store();
+        }else{
+            Dictionary currentDir = getCurrentDictionary();
+            if (currentDir.hasAvailable()){
+                currentDir.addItem(fileItem);
+                currentDir.store();
+            }else{
+                // TODO: 2017/5/17 需要给目录项添页的逻辑还没有写
+            }
+        }
 
+        getData().removeItem(getCurrentPath());
 
-
-
-
-        return false;
+        return ReturnUtil.success();
     }
 
 
 
     @Override
-    public boolean createDir(String dirName) {
-        return false;
+    public ReturnUtil createDir(String dirName) {
+        return ReturnUtil.success();
     }
 
     @Override
-    public void remove(String file) {
-
+    public ReturnUtil remove(String file) {
+        return ReturnUtil.success();
     }
 
     @Override

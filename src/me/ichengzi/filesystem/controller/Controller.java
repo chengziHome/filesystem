@@ -55,8 +55,8 @@ public class Controller {
      * @param fileName
      */
     public ReturnUtil touch(String fileName){
-        boolean b = manager.createFile(fileName);
-        return ReturnUtil.success();
+        ReturnUtil result = manager.createFile(fileName);
+        return result;
     }
 
 

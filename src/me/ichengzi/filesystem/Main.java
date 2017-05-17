@@ -67,7 +67,6 @@ public class Main {
                     } else{
                         String filename = cmds[1];
                         controller.touch(filename);
-                        // TODO: 2017/5/9  看后期的统一粒度安排，目前倾向于把所有协同工作聚合在Controller的实现里面，结构清晰
                     }
                     break;
                 case "mkdir":

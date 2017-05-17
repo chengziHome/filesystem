@@ -180,7 +180,10 @@ public class DefaultFile implements File,Item{
 
     @Override
     public void store() {
-
+        for (int i = 0; i < sectors.size(); i++) {
+            Sector sector = sectors.get(i);
+            sector.store();
+        }
     }
 
     @Override

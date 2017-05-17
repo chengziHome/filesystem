@@ -106,7 +106,10 @@ public class DefaultDir implements Dictionary,Item {
 
     @Override
     public void store() {
-
+        for (int i = 0; i < sectors.size(); i++) {
+            Sector sector = sectors.get(i);
+            sector.store();
+        }
     }
 
     @Override
@@ -117,6 +120,16 @@ public class DefaultDir implements Dictionary,Item {
     @Override
     public void setSectors(List<Sector> sectors) {
         this.sectors = sectors;
+    }
+
+    @Override
+    public boolean hasAvailable() {
+        for (int i = 0; i < items.size(); i++) {
+            if (item.getFirstByte()==Constant.ITEM_FIRST_DISABLED || item.getFirstByte()==Constant.ITEM_FIRST_NOUSE){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

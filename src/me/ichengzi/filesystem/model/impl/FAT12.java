@@ -78,40 +78,38 @@ public class FAT12 implements Fat{
         array[index] = val;
     }
 
+
     /**
-     * 注意哈，这里数组是个引用类型。如果有足够的空间，返回true，并且clus数组被赋值为簇链的索引。
-     * 如果不能分配到足够的空间，那么返回false，就上层模块就不会再使用clus数组了
-     * @param first
-     * @param clus
+     * 这个方法就是用来申请扇区的，需要把FAT中的链表建立
+     * @param len
      * @return
      */
     @Override
-    public boolean setClusList(int first, int[] clus,int len) {
-        int[] result = new int[len];
-        int j = 0;
-        for (int i = 2; i < array.length; i++) {
-            if (array[i] == 0){//空闲簇
-                result[j++] = i;
-                if (j==len)
-                    break;
-            }
-        }
-        if (result[len-1] == 0){
-            return false;
-        }else{
-            clus = result;
-            return true;
-        }
-    }
-
-    @Override
     public int[] getFreeClus(int len) {
-        return new int[0];
+        int[] result = new int[len];
+        int pos = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i]==0){
+                result[pos++] = i;
+            }
+            if (pos==len) break;
+        }
+
+        if (pos!=len)
+            return null;
+
+        //如果成功申请到，还要修改FAT数组
+        for (int i = 0; i < result.length - 1; i++) {
+            array[result[i]] = result[i+1];
+        }
+        array[result[len-1]] = 0xFFF;
+
+        return result;
     }
 
     @Override
     public byte[] getBytes() {
-        return new byte[0];
+        return bytes;
     }
 
 

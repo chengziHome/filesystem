@@ -16,3 +16,4 @@
     对于Item对象，我单纯的从Root区或者Data区将字节数组赋值了出来，但是Disk并没有维持对这些游离的Item对象的引用，
     所以store的时候完全无从谈起。所以我现在的补救措施是：反向的，在Item对象中增加两个指针，指向的是该Item本身
     的自己数组在Root或者Data中的起始地值；另外还要设置一个标志位用来表明是Root还是Data。
+    另外一个是区分item项的store和dir/file的store，前者是对32bit序列化到byte数组上，后者是将他们的扇区链持久化到Data分区中

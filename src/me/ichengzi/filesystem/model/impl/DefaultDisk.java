@@ -192,7 +192,7 @@ public class DefaultDisk implements Disk {
     }
 
     private Data loadData(int offset){
-        data = new DefaultData(Arrays.copyOfRange(bytes,offset,max_len),offset);
+        data = new DefaultData(offset);
         return null;
     }
 

@@ -1,6 +1,7 @@
 package me.ichengzi.filesystem.model;
 
 import me.ichengzi.filesystem.model.impl.DefaultDir;
+import me.ichengzi.filesystem.util.ReturnUtil;
 
 import java.util.Deque;
 import java.util.List;
@@ -20,10 +21,10 @@ public interface DiskManager {
     File findFile(String fileName);
     Dictionary findDir(String dirName);
 
-    boolean createFile(String fileName);
-    boolean createDir(String dirName);
+    ReturnUtil createFile(String fileName);
+    ReturnUtil createDir(String dirName);
 
-    void remove(String file);
+    ReturnUtil remove(String file);
 
     List list();
 

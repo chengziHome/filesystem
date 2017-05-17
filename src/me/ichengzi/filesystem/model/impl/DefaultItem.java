@@ -40,6 +40,7 @@ public class DefaultItem implements Item {
 
 
     public DefaultItem() {
+        bytes = new byte[Constant.ITEM_SIZE];
     }
 
     public DefaultItem(byte[] bs) {
@@ -199,14 +200,19 @@ public class DefaultItem implements Item {
     @Override
     public void store() {
         byte[] bs = Byte2String.getBytes(dir_Name);
-        for (int i = 0; i < 11; i++) {
-            bytes[i] = bs[i];
+        int pos = 0;
+        while(pos<bs.length && pos<11){
+            bytes[pos] = bs[pos];
+            pos++;
         }
         bytes[11] = (byte) dir_Attr;
         byte[] bs1 = Byte2String.getBytes(reserved);
-        for (int i = 0; i < 10; i++) {
-            bytes[i+12] = bs1[i];
+        int pos1 = 0 ;
+        while(pos1<10 && pos1<bs1.length){
+            bytes[pos1+12] = bs1[pos1];
+            pos1++;
         }
+
         bytes[22] = new Integer(dir_WrtTime&0x00FF).byteValue();
         bytes[23] = new Integer((dir_WrtTime&0xFF00)>>8).byteValue();
         bytes[24] = new Integer((dir_WrtDate&0x00FF)).byteValue();

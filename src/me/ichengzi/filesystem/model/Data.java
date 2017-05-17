@@ -35,5 +35,8 @@ public interface Data {
 
     int getDataOffset();
 
+    void initSector(int[] indexs);
+    void removeItem(String absolute);
+
 
 }

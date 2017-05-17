@@ -19,7 +19,6 @@ import java.util.*;
  */
 public class DefaultData implements Data {
 
-    private byte[] bytes;
 
     private int offset;
 
@@ -41,9 +40,9 @@ public class DefaultData implements Data {
 
     private static final DefaultDiskManager manager = DefaultDiskManager.getManager();
 
-    public DefaultData(byte[] bytes,int offset) {
+    public DefaultData(int offset) {
         this.offset = offset;
-        this.bytes = bytes;
+
         registeTable = new ArrayDeque<RegisteEntry>();
         //这里是个固定大小，模拟内存仅能容纳100个扇区，所以理论上下面的所有方法都不应该调用List的remove方法。
         sectorTable = new ArrayList<SectorEntry>();
@@ -228,7 +227,8 @@ public class DefaultData implements Data {
         List<Sector> result = new ArrayList<>();
         for (int i = 0; i < indexs.length; i++) {
             int index = indexs[i];
-            Sector sector = new DefaultSector(Arrays.copyOfRange(bytes,(index-1)*Constant.SECTOR_SIZE,index*Constant.SECTOR_SIZE));
+            byte[] bytes = DefaultDiskManager.getManager().getDisk().getBytes();
+            Sector sector = new DefaultSector(Arrays.copyOfRange(bytes,offset+(index-1)*Constant.SECTOR_SIZE,offset+index*Constant.SECTOR_SIZE));
             result.add(sector);
         }
 
@@ -316,6 +316,36 @@ public class DefaultData implements Data {
     @Override
     public int getDataOffset() {
         return offset;
+    }
+
+
+    @Override
+    public void initSector(int[] indexs) {
+        for (int i = 0; i < indexs.length; i++) {
+            int sec_num = indexs[i];
+            int start = offset + sec_num*Constant.SECTOR_SIZE;
+            DefaultDiskManager.getManager().getDisk().store(new byte[Constant.SECTOR_SIZE],start);
+        }
+    }
+
+    /**
+     * 删除掉注册表和扇区链表中某个item项的记录，
+     * 有则删除，没有则什么都不做
+     * @param absolute
+     */
+    @Override
+    public void removeItem(String absolute) {
+        int[] indexs = null;
+        for (RegisteEntry entry:registeTable){
+            if (absolute.equals(entry.getAbsolutePath())){
+                indexs = entry.getIndexs();
+                break;
+            }
+        }
+        if (indexs==null) return;
+        for (int i = 0; i < indexs.length; i++) {
+            sectorTable.remove(indexs[i]);
+        }
     }
 
 

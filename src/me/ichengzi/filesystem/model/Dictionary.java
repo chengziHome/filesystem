@@ -25,4 +25,6 @@ public interface Dictionary {
     List<Sector> getSectors();
     void setSectors(List<Sector> sectors);
 
+    boolean hasAvailable();
+
 }

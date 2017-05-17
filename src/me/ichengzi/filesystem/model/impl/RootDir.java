@@ -84,6 +84,16 @@ public class RootDir implements Root {
     }
 
     @Override
+    public boolean hasAvailable() {
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            if (item.getFirstByte()==Constant.ITEM_FIRST_DISABLED || item.getFirstByte()==Constant.ITEM_FIRST_NOUSE)
+                return true;
+        }
+        return false;
+    }
+
+    @Override
     public byte[] getBytes() {
         return new byte[0];
     }

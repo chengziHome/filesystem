@@ -32,7 +32,8 @@ public class DefaultData implements Data {
      */
     private Deque<RegisteEntry> registeTable;
 
-    private List<SectorEntry> sectorTable;
+//    private List<SectorEntry> sectorTable;
+    private SectorEntry[] sectorTable;
 
     private static final int SECTOR_TABLE_MAX = 100;
 
@@ -45,9 +46,9 @@ public class DefaultData implements Data {
 
         registeTable = new ArrayDeque<RegisteEntry>();
         //这里是个固定大小，模拟内存仅能容纳100个扇区，所以理论上下面的所有方法都不应该调用List的remove方法。
-        sectorTable = new ArrayList<SectorEntry>();
+        sectorTable = new SectorEntry[SECTOR_TABLE_MAX];
         for (int i = 0; i < SECTOR_TABLE_MAX; i++) {
-            sectorTable.add(null);
+            sectorTable[i] = null;
         }
 
         remaining = SECTOR_TABLE_MAX;
@@ -91,7 +92,7 @@ public class DefaultData implements Data {
             int[] indexs = search(item);
 
             for (Integer integer:indexs){
-                SectorEntry entry = sectorTable.get(integer);
+                SectorEntry entry = sectorTable[integer];
                 result.add(entry.getSector());
             }
             return result;
@@ -110,9 +111,9 @@ public class DefaultData implements Data {
             int pos = 0;
             int[] res_indexs = new int[need];
             for (int i = 0; i < SECTOR_TABLE_MAX; i++) {
-                if (sectorTable.get(i)==null){//空闲
+                if (sectorTable[i]==null){//空闲
                     SectorEntry entry = new SectorEntry(indexs[pos],list.get(pos));
-                    sectorTable.add(i,entry);
+                    sectorTable[i]= entry;
                     res_indexs[pos] = i;
                     pos++;
                 }
@@ -132,7 +133,7 @@ public class DefaultData implements Data {
      */
     private void removeSectorTable(int[] indexs){
         for (int i = 0; i < indexs.length; i++) {
-            sectorTable.add(indexs[i],null);
+            sectorTable[indexs[i]] = null;
         }
     }
 
@@ -302,7 +303,7 @@ public class DefaultData implements Data {
 
     public void printTable(){
         System.out.println("regisTable:"+Arrays.toString(registeTable.toArray()));
-        System.out.println("sectorTable:"+Arrays.toString(sectorTable.toArray()));
+        System.out.println("sectorTable:"+Arrays.toString(sectorTable));
 
     }
 
@@ -380,7 +381,7 @@ public class DefaultData implements Data {
         }
         if (indexs==null) return;
         for (int i = 0; i < indexs.length; i++) {
-            sectorTable.remove(indexs[i]);
+            sectorTable[indexs[i]] = null;
         }
     }
 

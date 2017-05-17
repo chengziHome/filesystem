@@ -205,9 +205,11 @@ public class Controller {
 
 
 
+        //为了加载当前目录的扇区链表
         if (!"/".equals(manager.getCurrentPath())){
             Dictionary currentDir = manager.getCurrentDictionary();
-            manager.getData().load(currentDir.getItem());
+            //因为在getCurrentDictionary方法里面创建DefaultDir的过程中已经加载过一次了，
+//            manager.getData().load(currentDir.getItem());
         }
 
 

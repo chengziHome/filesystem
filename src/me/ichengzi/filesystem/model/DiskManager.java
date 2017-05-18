@@ -19,6 +19,9 @@ import java.util.List;
 public interface DiskManager {
 
     File findFile(String fileName);
+    void saveFile(File file,String newContext);
+
+
     Dictionary findDir(String dirName);
 
     ReturnUtil createFile(String fileName);

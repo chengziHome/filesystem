@@ -1,15 +1,13 @@
 package me.ichengzi.filesystem.model.impl;
 
 import me.ichengzi.filesystem.model.*;
+import me.ichengzi.filesystem.model.Dictionary;
 import me.ichengzi.filesystem.model.File;
 import me.ichengzi.filesystem.util.Constant;
 import me.ichengzi.filesystem.util.ReturnUtil;
 
 import java.io.*;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Coding is pretty charming when you love it!
@@ -51,9 +49,71 @@ public class DefaultDiskManager implements DiskManager{
         return instance;
     }
 
+
+    /**
+     * 如果找不到就返回null.
+     *
+     * @param fileName
+     * @return
+     */
     @Override
     public File findFile(String fileName) {
-        return null;
+        Item item = null;
+        if ("/".equals(getCurrentPath())){
+            item = getRoot().find(fileName);
+        }else{
+            Dictionary currentDir = getCurrentDictionary();
+            item = currentDir.find(fileName);
+        }
+        if (item==null){
+            return null;
+        }else if(item.getDir_Attr() == Constant.ITEM_ATTR_DIR){
+            return null;
+        }
+
+        item.setAbsolutePath(getCurrentPath()+item.getDir_Name()+"/");
+        File findFile = new DefaultFile(item);
+
+
+
+        return findFile;
+    }
+
+
+    /**
+     * 编辑以后的文件重新保存主要的逻辑，
+     * 首先搞清楚都需要做些什么
+     * 1，不用重新查找，字节操作File对象就可以(早期实现中，不会有多窗口的复杂任务)
+     * 2，对新的内容判断sectors链表是否够用。少了就在链表尾部添加，多了就截断释放多余扇区。并更新FAT表。重新构建Sector链表
+     *    首先更新FAT分区
+     * 3，将content内容映射到扇区链表的byte数组中。
+     * 4，将扇区链表的内容映射到Data分区中
+     * 5，删除Data内存管理中对该文件的缓存。
+     *
+     * @param file
+     * @param newContext
+     */
+    @Override
+    public void saveFile(File file, String newContext) {
+        byte[] bs = newContext.getBytes();
+//        int need_sec = bs.length/Constant.SECTOR_SIZE + (bs.length%Constant.SECTOR_SIZE==0?0:1);
+        int need_sec = bs.length/Constant.SECTOR_SIZE + 1;//绝大多数情况。
+        Item item = file.getItem();
+
+        int fst_sec = item.getDir_FstClus();
+        int[] new_indexs = getFAT1().ensure(fst_sec,need_sec);
+        getFAT1().store();
+        /*
+            把第3、4步骤合并，直接把content内容映射到Data分区中，不用维护这个File对象了
+            因为马上它在Data中的缓存就要被删除掉
+         */
+        for (int i = 0; i < new_indexs.length; i++) {
+            Sector sector = new DefaultSector(Arrays.copyOfRange(bs,i*Constant.SECTOR_SIZE,(i+1)*Constant.SECTOR_SIZE),new_indexs[i]);
+            sector.store();
+        }
+
+        getData().removeItem(file.getItem().getAbsolutePath());
+
     }
 
     @Override

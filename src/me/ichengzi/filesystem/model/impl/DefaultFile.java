@@ -1,6 +1,7 @@
 package me.ichengzi.filesystem.model.impl;
 
 import me.ichengzi.filesystem.model.*;
+import me.ichengzi.filesystem.util.Byte2String;
 import me.ichengzi.filesystem.util.Constant;
 
 import java.util.List;
@@ -24,6 +25,9 @@ public class DefaultFile implements File,Item{
     public DefaultFile() {
     }
 
+
+
+
     /**
      * 要注意，当要创建文件对象的时候，所有的Item对象和Sector链表都是已经就绪的。
      * 无论是在查询操作，还是创建文件的操作中。
@@ -37,12 +41,12 @@ public class DefaultFile implements File,Item{
             Sector sector = sectors.get(i);
             System.arraycopy(sector.getBytes(),0,tmp,i*Constant.SECTOR_SIZE,Constant.SECTOR_SIZE);
         }
-        content = new String(tmp);
+        content = Byte2String.getContent(tmp);
     }
 
     @Override
     public Item getItem() {
-        return null;
+        return item;
     }
 
     @Override
@@ -83,6 +87,11 @@ public class DefaultFile implements File,Item{
     @Override
     public String getDir_Name() {
         return item.getDir_Name();
+    }
+
+    @Override
+    public void setDir_Name(byte[] bs) {
+        item.setDir_Name(bs);
     }
 
     @Override

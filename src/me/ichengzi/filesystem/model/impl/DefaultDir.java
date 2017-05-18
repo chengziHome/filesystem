@@ -243,6 +243,11 @@ public class DefaultDir implements Dictionary,Item {
     }
 
     @Override
+    public void setDir_Name(byte[] bs) {
+        item.setDir_Name(bs);
+    }
+
+    @Override
     public void setDir_Name(String name) {
         item.setDir_Name(name);
     }

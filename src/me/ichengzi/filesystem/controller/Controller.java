@@ -1,7 +1,9 @@
 package me.ichengzi.filesystem.controller;
 
+import me.ichengzi.filesystem.editor.NotePad;
 import me.ichengzi.filesystem.model.*;
 import me.ichengzi.filesystem.model.Dictionary;
+import me.ichengzi.filesystem.model.File;
 import me.ichengzi.filesystem.model.impl.*;
 import me.ichengzi.filesystem.util.Constant;
 import me.ichengzi.filesystem.util.MapUtil;
@@ -80,6 +82,21 @@ public class Controller {
         ReturnUtil result = manager.remove(name);
         return result;
     }
+
+    public ReturnUtil edit(String fileName){
+        File file = manager.findFile(fileName);
+        if (file == null){
+            System.out.println("file==null");
+            return ReturnUtil.error("未找到文件");
+        }
+
+
+        new NotePad(file);
+
+
+        return ReturnUtil.success();
+    }
+
 
 
     /**

@@ -89,6 +89,19 @@ public class Main {
                         controller.remove(name);
                     }
                     break;
+
+                case "edit":
+                    if (!controller.hasInitialized()){
+                        initError();
+                    }else if(cmds.length!=2){
+                        parameterError();
+                    }else{
+                        String fileName = cmds[1];
+                        controller.edit(fileName);
+
+                    }
+
+                    break;
                 case "list":
                     if (!controller.hasInitialized()){
                         initError();

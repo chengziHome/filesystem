@@ -45,7 +45,7 @@ public class DefaultItem implements Item {
 
     public DefaultItem(byte[] bs) {
         this.bytes = bs;
-        setDir_Name(Byte2String.valueOf(Arrays.copyOfRange(bytes,0,0xB)));
+        setDir_Name(Arrays.copyOfRange(bytes,0,0xB));
         setDir_Attr(Byte2Int.getInt(Arrays.copyOfRange(bytes,0xB,0xC)));
         setReserve(Byte2String.valueOf(Arrays.copyOfRange(bytes,0xC,0x16)));
         setDir_WrtTime(Byte2Int.getInt(Arrays.copyOfRange(bytes,0x16,0x18)));
@@ -73,6 +73,25 @@ public class DefaultItem implements Item {
     @Override
     public String getDir_Name() {
         return dir_Name.trim();
+    }
+
+
+    /**
+     * 注意这里前八个字符是文件名称，后三个是后缀名
+     * 目录的话后缀名的位置为空
+     * @param bs
+     */
+    @Override
+    public void setDir_Name(byte[] bs) {
+        String name = Byte2String.valueOf(Arrays.copyOfRange(bs,0,8));
+        if (bs[8]== 0){
+            this.dir_Name = name;
+        }else{
+            String suffix = Byte2String.valueOf(Arrays.copyOfRange(bs,8,11));
+            this.dir_Name = name.trim() + "." + suffix;
+        }
+
+
     }
 
     @Override

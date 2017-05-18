@@ -20,6 +20,8 @@ public interface Fat {
     int[] getFreeClus(int len);
     void freeClusList(int[] indexs);
 
+    int[] ensure(int fst_sec,int need);
+
     byte[] getBytes();
     void store();
 

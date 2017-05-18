@@ -20,6 +20,7 @@ public interface Item {
     目录项属性
      */
     String getDir_Name();
+    void setDir_Name(byte[] bs);
     void setDir_Name(String name);
     int getDir_Attr();
     void setDir_Attr(int val);

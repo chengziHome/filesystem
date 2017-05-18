@@ -1,5 +1,8 @@
 package me.ichengzi.filesystem.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Coding is pretty charming when you love it!
  *
@@ -19,11 +22,17 @@ public class Byte2String {
      */
 
     public static String valueOf(byte[] bs){
-        char[] chars = new char[bs.length];
+        List<Character> list = new ArrayList<>();
         for (int i = 0; i < bs.length; i++) {
-            chars[i] = (char) bs[i];
+            if (bs[i]!=0){
+                list.add((char)bs[i]);
+            }
         }
-        return new String(chars);
+        char[] cs = new char[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            cs[i] = list.get(i);
+        }
+        return new String(cs);
 
     }
 
@@ -40,6 +49,27 @@ public class Byte2String {
             bytes[i] = (byte) chars[i];
         }
         return bytes;
+    }
+
+
+    /**
+     * 专门为文件的内容转化设置的，
+     * 因为在文件编辑中会遇到问题
+     * @param bs
+     * @return
+     */
+    public static String getContent(byte[] bs){
+
+        int end = bs.length;
+        while(bs[--end]==0);//把byte数组末尾的所有0去掉
+        byte[] bytes = new byte[end+1];
+        for (int i = 0; i < end + 1; i++) {
+            bytes[i] = bs[i];
+        }
+        String result = new String(bytes);
+        return result;
+
+
     }
 
 

@@ -119,6 +119,51 @@ public class FAT12 implements Fat{
         }
     }
 
+    /**
+     * 确保以fst_sec开始的链表有need需要的扇区个数
+     * 如果need远远大于原先链表，可能不够，则返回null
+     * 如果够了，就返回新的链表索引
+     *
+     *
+     * @param fst_sec
+     * @param need  上层模块已经保证，need是一定大于等于1的
+     * @return
+     */
+    @Override
+    public int[] ensure(int fst_sec, int need) {
+
+        int[] result = new int[need];
+        int[] origin_indexs = getClusList(fst_sec);
+        int origin_len = origin_indexs.length;
+        if (origin_len==need){//这也是绝大多数情况
+            result = origin_indexs;
+        }else if(origin_len>need){
+            array[origin_indexs[need-1]] = Constant.CLUS_LIST_END;
+            for (int i = need; i < origin_len; i++) {
+                array[origin_indexs[i]] = 0;
+            }
+            for (int i = 0; i < need; i++) {
+                result[i] = origin_indexs[i];
+            }
+        }else{
+            int[] more_indexs =  getFreeClus(need-origin_len);
+            if (more_indexs==null){
+                return null;
+            }
+            //在结果中把两个链表拼接起来
+            for (int i = 0; i < origin_len; i++) {
+                result[i] = origin_indexs[i];
+            }
+            for (int i = 0; i < more_indexs.length; i++) {
+                result[origin_len+i] = more_indexs[i];
+            }
+            //在FAT数组中将两个链表拼接起来
+            array[origin_indexs[origin_len-1]] = more_indexs[0];
+        }
+
+        return result;
+    }
+
     @Override
     public byte[] getBytes() {
         return bytes;

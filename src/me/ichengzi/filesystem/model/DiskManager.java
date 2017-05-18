@@ -25,6 +25,7 @@ public interface DiskManager {
     ReturnUtil createDir(String dirName);
 
     ReturnUtil remove(String file);
+    ReturnUtil removeDir(String dirName);
 
     List list();
 

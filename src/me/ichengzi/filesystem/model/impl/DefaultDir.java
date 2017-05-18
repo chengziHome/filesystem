@@ -130,7 +130,7 @@ public class DefaultDir implements Dictionary,Item {
     }
 
     /**
-     * 除了删除表项 ，并且持久化之外，还要报缓存清空
+     * 这个方法只能删除文件
      * @param name
      */
     @Override
@@ -146,11 +146,44 @@ public class DefaultDir implements Dictionary,Item {
                 return;
             }
         }
+    }
 
 
+    /**
+     * 删除整个目录的递归方法
+     * 注意，这里在加载子目录的Sector链的时候直接手动加载，不通过内存管理模块，
+     * 不然的话特别的麻烦。
+     */
+    @Override
+    public void removeAllSubDir() {
+        if (this.item.getAbsolutePath()==null){
+            throw new IllegalArgumentException("要给本目录设置absolutePath属性");
+        }
+        //i从2开始略过头两项特殊项
+        for (int i = 2; i < items.size(); i++) {
+            Item item = items.get(i);
+            if (item.getFirstByte()!=Constant.ITEM_FIRST_DISABLED && item.getFirstByte()!=Constant.ITEM_FIRST_NOUSE){
+                if (item.getDir_Attr() == Constant.ITEM_ATTR_FILE){
+                    remove(item.getDir_Name());
+                }else{//如果是目录
+                    item.setAbsolutePath(this.item.getAbsolutePath()+item.getDir_Name()+"/");
+                    Dictionary dir = new DefaultDir(item);
+                    dir.removeAllSubDir();
+                }
+                //每个目录项处理完之后都应该立即更新FAT表
+                int[] sec_indexs = DefaultDiskManager .getManager().getFAT1().getClusList(item.getDir_FstClus());
+                DefaultDiskManager.getManager().getFAT1().freeClusList(sec_indexs);
+            }
+        }
+        //当本目录的所有目录项都处理完之后，应该讲Items的高级数据结构统一映射到sectors上面去。
+        for (int i = 0; i < items.size(); i++) {
+            int a = i/Constant.SECTOR_SIZE;
+            int b = i%Constant.SECTOR_SIZE;
+            Sector sector = sectors.get(a);
+            sector.setBytes(item.getBytes(),b* Constant.ITEM_SIZE);
+        }
 
-
-
+        store();//将sectors的byte数组中的变化映射到Data数组中去
     }
 
 

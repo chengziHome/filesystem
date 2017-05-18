@@ -24,7 +24,7 @@ public class DefaultDiskManager implements DiskManager{
     private Deque<Item> currentPathStack;
 
 
-    private static final String DISK_FILE_PATH = "E:/fat/filesys1.flp";
+    private static final String DISK_FILE_PATH = "E:/fat/startand.flp";
 
 
     /**
@@ -164,17 +164,29 @@ public class DefaultDiskManager implements DiskManager{
     @Override
     public ReturnUtil remove(String file) {
         int[] fat_indexs = null;
+        Item findItem = null;
         if ("/".equals(getCurrentPath())){
-            int fstClus = getRoot().find(file).getDir_FstClus();
+            findItem = getRoot().find(file);
+            int fstClus = findItem.getDir_FstClus();
             fat_indexs = getFAT1().getClusList(fstClus);
             getRoot().remove(file);
         }else{
             Dictionary currentDir = getCurrentDictionary();
-            int fstClus = currentDir.find(file).getDir_FstClus();
+            findItem = currentDir.find(file);
+            int fstClus = findItem.getDir_FstClus();
             fat_indexs = getFAT1().getClusList(fstClus);
             currentDir.remove(file);
             currentDir.store();
         }
+        if (findItem.getDir_Attr() == Constant.ITEM_ATTR_DIR){
+
+            findItem.setAbsolutePath(getCurrentPath()+findItem.getDir_Name()+"/");
+            Dictionary dir = new DefaultDir(findItem);
+            dir.removeAllSubDir();
+
+        }
+
+        //更新FAT表
         getFAT1().freeClusList(fat_indexs);
         getFAT1().store();
         //删除缓存,目录文件一并处理，不冲突
@@ -186,6 +198,22 @@ public class DefaultDiskManager implements DiskManager{
 
         return ReturnUtil.success();
     }
+
+
+    /**
+     * 删除文件和目录还是有很大不同，删除文件直接将Item首位bit置失效就可以了
+     * 但是删除目录，还要做的一项工作是：将所有子目录下所有的Item项的FAT扇区链
+     * 统统置位为0；
+     * @param dirName
+     * @return
+     */
+    @Override
+    public ReturnUtil removeDir(String dirName) {
+
+        return null;
+    }
+
+
 
     @Override
     public List list() {

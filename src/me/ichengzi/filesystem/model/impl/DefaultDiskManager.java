@@ -73,6 +73,8 @@ public class DefaultDiskManager implements DiskManager{
                 return ReturnUtil.error("根目录下的目录项已经达到上限");
         }
         int[] indexs = getFAT1().getFreeClus(1);
+        getFAT1().store();
+
         if (indexs==null){
             return ReturnUtil.error("磁盘已满，无可用空间");
         }
@@ -154,6 +156,11 @@ public class DefaultDiskManager implements DiskManager{
     }
 
 
+    /**
+     * 删除文件或者目录的主要逻辑
+     * @param file
+     * @return
+     */
     @Override
     public ReturnUtil remove(String file) {
         int[] fat_indexs = null;
@@ -166,12 +173,16 @@ public class DefaultDiskManager implements DiskManager{
             int fstClus = currentDir.find(file).getDir_FstClus();
             fat_indexs = getFAT1().getClusList(fstClus);
             currentDir.remove(file);
+            currentDir.store();
         }
         getFAT1().freeClusList(fat_indexs);
+        getFAT1().store();
         //删除缓存,目录文件一并处理，不冲突
         getData().removeItem(getCurrentPath()+file);
         getData().removeItem(getCurrentPath()+file+"/");
 
+        //和添加方法一样，当前目录的Data中的缓存同样要清空。
+        getData().removeItem(getCurrentPath());
 
         return ReturnUtil.success();
     }

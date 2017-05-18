@@ -83,7 +83,7 @@ public class DefaultDir implements Dictionary,Item {
             continue;
         result.add(item);
     }
-    return items;
+    return result;
 }
 
     @Override

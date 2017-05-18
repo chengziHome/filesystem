@@ -101,6 +101,7 @@ public class RootDir implements Root {
                 item.setFirstByte(Constant.ITEM_FIRST_DISABLED);
                 //这里不能执行item.store，会把刚刚修改的首位byte覆盖掉
 //                item.store();
+                // TODO: 2017/5/18 实现一个只完成对应Item项的store方法
                 store();
             }
         }
@@ -110,6 +111,8 @@ public class RootDir implements Root {
     public byte[] getBytes() {
         return bytes;
     }
+
+
 
 
     /**

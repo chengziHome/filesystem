@@ -107,8 +107,93 @@ public class DefaultDisk implements Disk {
 
     }
 
+    /**
+     * 将磁盘格式化，因为在这个系统里假定BOOT是不会改变的，所以格式化的操作完全按照Boot里面的参数来进行
+     * 简单起见，这了不用创建任何的分区的对象，值需要得到内存中的Boot对象，取出响应的参数
+     * 找到相应的偏移位置进行初始化。就连盘符名称也不可以改变了
+     */
     @Override
     public void format() {
+        int Sec_Size = boot.getBPB_BytePerSec();//扇区大小，假定不变
+        int fat1_offset = boot.getBPB_ResvSecCnt()*Sec_Size;//FAT1分区偏移地址。
+        int fat1_end = (boot.getBPB_ResvSecCnt()+boot.getBPB_FATSz16())*Sec_Size;
+        int fat2_offset = fat1_end;
+        int fat2_end = (boot.getBPB_ResvSecCnt()+boot.getBPB_FATSz16()*2)*Sec_Size;
+        int root_offset = fat2_end;
+        int root_end = (boot.getBPB_ResvSecCnt()+boot.getBPB_FATSz16()*2)*Sec_Size + boot.getBPB_RootEntCnt()*Constant.ITEM_SIZE;
+        int data_offset = root_end;
+        int data_end = boot.getBPB_TotSec16() * Sec_Size;
+
+        byte[] bs = new byte[data_end];
+        //初始化Boot分区，数据不变
+        int pos = 0;
+        for (int i = 0; i <fat1_offset ; i++) {
+            bs[pos++] = bytes[i];
+        }
+        //初始化FAT1分区
+        int len = boot.getBPB_FATSz16()*Sec_Size;
+        bs[pos++] = (byte) 0xF0;
+        bs[pos++] = (byte) 0xFF;
+        bs[pos++] = (byte) 0xFF;
+        for (int i = 0; i < len-3; i++) {
+            bs[pos++] = 0x00;
+        }
+
+        //初始化FAT2分区
+        bs[pos++] = (byte) 0xF0;
+        bs[pos++] = (byte) 0xFF;
+        bs[pos++] = (byte) 0xFF;
+        for (int i = 0; i < len-3; i++) {
+            bs[pos++] = 0x00;
+        }
+
+        //初始化根目录区
+        String name = boot.getBS_VolLab();
+        byte[] nameBytes = name.getBytes();
+        byte[] rootName = new byte[11];
+        for (int i = 0; i < 11; i++) {
+            if (i<nameBytes.length){
+                bs[pos++] = nameBytes[i];
+            }else{
+                bs[pos++] = 0x00;
+            }
+        }
+        bs[pos++] = 0x28;
+        for (int i = 0; i < 10; i++) {
+            bs[pos++] = 0x00;
+        }
+        // TODO: 2017/5/20 下面四位是时间到后面统一更改
+        bs[pos++] = 0x4C;
+        bs[pos++] = 0x76;
+        bs[pos++] = (byte) 0xB2;
+        bs[pos++] = 0x4A;
+        bs[pos++] = 0x00;
+        bs[pos++] = 0x00;
+        bs[pos++] = 0x00;
+        bs[pos++] = 0x00;
+        bs[pos++] = 0x00;
+        bs[pos++] = 0x00;
+
+        int root_len = boot.getBPB_RootEntCnt()*Constant.ITEM_SIZE;
+        for (int i = 0; i < root_len-32; i++) {
+            bs[pos++] = 0x00;
+        }
+
+        //最后就是数据区，
+        while(pos<data_end){
+            bs[pos++] = (byte) 0xF6;
+        }
+
+        bytes = bs;
+
+        //把Data区的数据缓存全部清空
+        data.clear();
+
+
+        //这里做持久化，但是并不退出系统。
+        DefaultDiskManager.getManager().exit();
+
+        init();
 
     }
 

@@ -66,7 +66,9 @@ public class Main {
                         parameterError();
                     } else{
                         String filename = cmds[1];
-                        controller.touch(filename);
+                        ReturnUtil result = controller.touch(filename);
+                        if (result.getRet_code()!=0)
+                            error(result.getErr_msg());
                     }
                     break;
                 case "mkdir":
@@ -76,7 +78,9 @@ public class Main {
                         parameterError();
                     }else{
                         String dirName = cmds[1];
-                        controller.mkdir(dirName);
+                        ReturnUtil result = controller.mkdir(dirName);
+                        if (result.getRet_code()!=0)
+                            error(result.getErr_msg());
                     }
                     break;
                 case "rm":

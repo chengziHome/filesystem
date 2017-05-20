@@ -38,6 +38,7 @@ public interface Data {
     void initFileSector(int[] indexs);
     void initDirSector(int[] indexs);
     void removeItem(String absolute);
+    void clear();
 
 
 }

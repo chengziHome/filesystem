@@ -386,4 +386,16 @@ public class DefaultData implements Data {
     }
 
 
+    /**
+     * 清空整个缓存区域
+     */
+    @Override
+    public void clear() {
+        registeTable.clear();
+        for (int i = 0; i < 100; i++) {
+            sectorTable[i] =  null;
+        }
+    }
+
+
 }

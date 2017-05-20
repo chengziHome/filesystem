@@ -43,8 +43,15 @@ public class Controller {
         return manager;
     }
 
+
+
     /**
      * 简单起见，除了Boot分区，所有的数据结构全部清空即可
+     * 实现了这个方法并且在系统中开始使用之后，就完全是按照自己的定义的文件方式来进行测试了
+     * 既是好事也是坏事，一方面能够彻底的保证系统是完全自己实现的，出了问题好找，
+     * 另一方面，也有可能因为是自己做的所以会有一些不完善的地方导致隐匿的BUG
+     *
+     *
      */
     public void format() {
         Disk disk = manager.getDisk();

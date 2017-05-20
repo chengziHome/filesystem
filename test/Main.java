@@ -13,7 +13,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-
+        byte b = (byte) 0xF0;
+        System.out.println(b);
 
 
     }

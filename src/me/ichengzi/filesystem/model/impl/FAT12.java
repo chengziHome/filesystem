@@ -150,6 +150,10 @@ public class FAT12 implements Fat{
             if (more_indexs==null){
                 return null;
             }
+            //这里容易忘记，要把新分配的扇区初始化
+            DefaultDiskManager.getManager().getData().initFileSector(more_indexs);
+
+
             //在结果中把两个链表拼接起来
             for (int i = 0; i < origin_len; i++) {
                 result[i] = origin_indexs[i];
@@ -193,7 +197,7 @@ public class FAT12 implements Fat{
         }
         //如果array是奇数
         if (array.length%2==1){
-            // TODO: 2017/5/16 在实验中偷个懒，一般不会用到数组的最后的，
+            // 在实验中偷个懒，一般不会用到数组的最后的，
         }
 
     }

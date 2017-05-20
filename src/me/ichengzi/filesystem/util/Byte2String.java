@@ -59,18 +59,17 @@ public class Byte2String {
      * @return
      */
     public static String getContent(byte[] bs){
-
         int end = bs.length;
-        while(bs[--end]==0);//把byte数组末尾的所有0去掉
+        while(end>0&&bs[--end]==0);//把byte数组末尾的所有0去掉
         byte[] bytes = new byte[end+1];
         for (int i = 0; i < end + 1; i++) {
             bytes[i] = bs[i];
         }
         String result = new String(bytes);
         return result;
-
-
     }
+
+
 
 
 }

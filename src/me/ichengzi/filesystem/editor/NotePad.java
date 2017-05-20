@@ -76,9 +76,6 @@ public class NotePad extends JFrame implements ActionListener{
          */
 
 //        System.out.println("NodePad-newContext:"+newContent.trim());
-
-
-        // TODO: 2017/5/18 得到的内容不一致，可能和文本编辑器的初始化有关系，先空过去。
         DefaultDiskManager.getManager().saveFile(file,newContent);
     }
 

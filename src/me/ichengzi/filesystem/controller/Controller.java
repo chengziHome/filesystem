@@ -191,8 +191,6 @@ public class Controller {
                         return ReturnUtil.error("根目录无上层目录");
                     } else {
                         copyStack.pop();
-                        // TODO: 2017/5/17 退回上一级目录的构思我完全是想错了。前两个目录项的存在就是为了把所有目录跳转的功能统一化，我一开始就没有理解到这一点。目录转换的实现都比较复杂了，属于是重大失误
-
                     }
                 } else {//向下
                     Item son = null;

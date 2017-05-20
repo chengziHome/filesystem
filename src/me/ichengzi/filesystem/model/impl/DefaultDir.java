@@ -94,16 +94,25 @@ public class DefaultDir implements Dictionary,Item {
             if(firstByte == Constant.ITEM_FIRST_DISABLED || firstByte == Constant.ITEM_FIRST_NOUSE){
                 items.add(i,item);
                 //要把该item处修改对应的byte数组投射到对应的扇区上
-                int a = i/Constant.SECTOR_SIZE;
-                int b = i%Constant.SECTOR_SIZE;
+                int item_num = Constant.SECTOR_SIZE/Constant.ITEM_SIZE;
+                int a = i/item_num;
+                int b = i%item_num;
                 Sector sector = sectors.get(a);
                 sector.setBytes(item.getBytes(),b* Constant.ITEM_SIZE);
                 return;
             }
-
         }
+        //如果到这里还没有返回，说明需要加入新的扇区。
+        DefaultDiskManager manager = DefaultDiskManager.getManager();
+        int[] sec_indexs = manager.getFAT1().getClusList(this.item.getDir_FstClus());
+        int[] new_indexs = manager.getFAT1().ensure(this.item.getDir_FstClus(), sec_indexs.length+1);
 
-        // TODO: 2017/5/11 要加入一个新的扇区的逻辑还没有写
+        manager.getFAT1().store();
+        //清空缓存后重新加载sectors同时也就更新了items链表，这个时候回多出16个空项。
+        manager.getData().removeItem(this.item.getAbsolutePath());
+        loadSectors();
+        addItem(item);//注意这里并不是绝对递归，最多递归一次
+
 
     }
 
@@ -139,8 +148,9 @@ public class DefaultDir implements Dictionary,Item {
             Item item = items.get(i);
             if (name.equals(item.getDir_Name())){
                 item.setFirstByte(Constant.ITEM_FIRST_DISABLED);
-                int a = i/Constant.SECTOR_SIZE;
-                int b = i%Constant.SECTOR_SIZE;
+                int item_num = Constant.SECTOR_SIZE/Constant.ITEM_SIZE;
+                int a = i/item_num;
+                int b = i%item_num;
                 Sector sector = sectors.get(a);
                 sector.setBytes(item.getBytes(),b* Constant.ITEM_SIZE);
                 return;
@@ -167,6 +177,7 @@ public class DefaultDir implements Dictionary,Item {
                     remove(item.getDir_Name());
                 }else{//如果是目录
                     item.setAbsolutePath(this.item.getAbsolutePath()+item.getDir_Name()+"/");
+                    System.out.println("item.name:"+item.getDir_Name());
                     Dictionary dir = new DefaultDir(item);
                     dir.removeAllSubDir();
                 }
@@ -177,8 +188,9 @@ public class DefaultDir implements Dictionary,Item {
         }
         //当本目录的所有目录项都处理完之后，应该讲Items的高级数据结构统一映射到sectors上面去。
         for (int i = 0; i < items.size(); i++) {
-            int a = i/Constant.SECTOR_SIZE;
-            int b = i%Constant.SECTOR_SIZE;
+            int item_num = Constant.SECTOR_SIZE/Constant.ITEM_SIZE;
+            int a = i/item_num;
+            int b = i%item_num;
             Sector sector = sectors.get(a);
             sector.setBytes(item.getBytes(),b* Constant.ITEM_SIZE);
         }

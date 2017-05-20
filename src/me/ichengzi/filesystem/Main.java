@@ -55,8 +55,7 @@ public class Main {
                         parameterError();
                     }else{
                         controller.format();
-                        // TODO: 2017/5/9  format里面的内容应该和init里面在数据结构的重构上应该是一样的
-
+                        success("format!");
                     }
                     break;
                 case "touch":
@@ -90,7 +89,9 @@ public class Main {
                         parameterError();
                     }else{
                         String name = cmds[1];
-                        controller.remove(name);
+                        ReturnUtil result = controller.remove(name);
+                        if (result.getRet_code()!=0)
+                            error(result.getErr_msg());
                     }
                     break;
 
@@ -101,8 +102,9 @@ public class Main {
                         parameterError();
                     }else{
                         String fileName = cmds[1];
-                        controller.edit(fileName);
-
+                        ReturnUtil result = controller.edit(fileName);
+                        if (result.getRet_code()!=0)
+                            error(result.getErr_msg());
                     }
 
                     break;
@@ -127,8 +129,9 @@ public class Main {
                         parameterError();
                     }else{
                         String destPath = cmds[1];
-                        controller.cd(destPath);
-
+                        ReturnUtil result = controller.cd(destPath);
+                        if (result.getRet_code()!=0)
+                            error(result.getErr_msg());
                     }
                     currentPath();
                     break;
@@ -180,7 +183,6 @@ public class Main {
     private static void currentPath(){
         String currentPath = controller.getManager().getCurrentPath();
         System.out.printf(currentPath.substring(0,currentPath.length()-1)+">");
-        // TODO: 2017/5/15 如何控制光标显示在一行的最右边
     }
 
     private static void success(String opteration){
@@ -222,7 +224,6 @@ public class Main {
 
 
     private static void printDirList(List<Item> items){
-        // TODO: 2017/5/17 打印目录的格式细节到最后再修改
         if (!items.isEmpty()){
             for (Item item:items){
                 System.out.printf("%-12s%-12s<DIR>%-12s  %-30s\n",item.getFormatDate(),item.getFormatTime(),"",item.getDir_Name());

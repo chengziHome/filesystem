@@ -50,7 +50,6 @@ public class BootAttr {
 //        for (int i = 0; i < tmp.length; i++) {
 //            bytes[i] = tmp[i];
 //        }
-//        // TODO: 2017/5/9 是够要对未填满的地方进行填充
 //
 //    }
 //
@@ -59,7 +58,6 @@ public class BootAttr {
 //        this.len = len;
 //        bytes = new byte[len];
 //        this.intVal = intVal;
-//        // TODO: 2017/5/9 编码的问题是真的蛋疼，搭建起来框架之后再去实现这个
 //        if(len == 1){
 //            bytes[0] = new Integer(intVal).byteValue();
 //        }else if(len == 2){

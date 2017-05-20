@@ -218,12 +218,31 @@ public class DefaultItem implements Item {
      */
     @Override
     public void store() {
-        byte[] bs = Byte2String.getBytes(dir_Name);
-        int pos = 0;
-        while(pos<bs.length && pos<11){
-            bytes[pos] = bs[pos];
-            pos++;
+        //这里注意处理文件名和后缀名
+        String[] names = dir_Name.split("\\.");
+        if (names.length==1){//没有后缀
+            byte[] bs = Byte2String.getBytes(dir_Name);
+            int pos = 0;
+            while(pos<bs.length && pos<8){
+                bytes[pos] = bs[pos];
+                pos++;
+            }
+        }else if(names.length==2){//有后缀
+            byte[] nameBytes = Byte2String.getBytes(names[0]);
+            int pos = 0;
+            while(pos<nameBytes.length && pos<8){
+                bytes[pos] = nameBytes[pos];
+                pos++;
+            }
+            byte[] suffixBytes = Byte2String.getBytes(names[1]);
+            pos = 8;
+            while(pos<suffixBytes.length && pos<11){
+                bytes[pos] = suffixBytes[pos];
+                pos++;
+            }
         }
+
+
         bytes[11] = (byte) dir_Attr;
         byte[] bs1 = Byte2String.getBytes(reserved);
         int pos1 = 0 ;
@@ -232,12 +251,15 @@ public class DefaultItem implements Item {
             pos1++;
         }
 
+//        System.out.println("time:"+dir_WrtTime+",date:"+dir_WrtDate);
+
         bytes[22] = new Integer(dir_WrtTime&0x00FF).byteValue();
         bytes[23] = new Integer((dir_WrtTime&0xFF00)>>8).byteValue();
         bytes[24] = new Integer((dir_WrtDate&0x00FF)).byteValue();
-        bytes[25] = new Integer((dir_WrtDate&0xFF00)).byteValue();
+        bytes[25] = new Integer((dir_WrtDate&0xFF00)>>8).byteValue();
+
         bytes[26] = new Integer((dir_FstClus&0x00FF)).byteValue();
-        bytes[27] = new Integer((dir_FstClus&0xFF00)).byteValue();
+        bytes[27] = new Integer((dir_FstClus&0xFF00)>>8).byteValue();
         bytes[28] = new Integer(dir_FileSize&0x000000FF).byteValue();
         bytes[29] = new Integer((dir_FstClus&0x0000FF00)>>8).byteValue();
         bytes[30] = new Integer((dir_FstClus&0x00FF0000)>>16).byteValue();

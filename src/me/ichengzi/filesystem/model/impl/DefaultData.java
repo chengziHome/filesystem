@@ -2,6 +2,7 @@ package me.ichengzi.filesystem.model.impl;
 
 import me.ichengzi.filesystem.model.*;
 import me.ichengzi.filesystem.model.Dictionary;
+import me.ichengzi.filesystem.util.Byte2Int;
 import me.ichengzi.filesystem.util.Constant;
 
 import java.util.*;
@@ -138,75 +139,7 @@ public class DefaultData implements Data {
     }
 
 
-    /**
-     * 将指定的索引处的Sector写回到byte数组里面
-     * @param indexs
-     */
-    @Override
-    public void store(int[] indexs) {
-        // TODO: 2017/5/11 这个方法都不知道会不会用到
-    }
 
-    @Override
-    public void store(int[] indexs, List<Sector> sectors) {
-
-    }
-
-
-    @Override
-    public void delete(Item item) {
-        load(manager.getCurrentDictionary().getItem());
-        Dictionary currentDir = manager.getCurrentDictionary();
-        currentDir.delete(item);
-        currentDir.store();
-        if (search(item)!=null){
-            int[] indexs = search(item);
-            removeSectorTable(indexs);
-            remaining += indexs.length;
-        }
-    }
-
-    /**
-     * 添加一个空文件，其实主要是更新一下注册表的sectorTable
-     * @return
-     */
-    @Override
-    public int addFile(Item file) {
-//        int[] indexs = null;
-//        if ((indexs = manager.getFAT1().getFreeClus(1))!=null){//有空闲空间
-//            Sector sector = new DefaultSector(new byte[Constant.SECTOR_SIZE]);
-//            List<Sector> sectors = new ArrayList<>();
-//            sectors.add(sector);
-//            store(indexs,sectors);
-//            load(file);
-//            Dictionary currentDir = manager.getCurrentDictionary();
-//            currentDir.addItem(file);
-//            currentDir.store();
-//        }
-        return -1;
-    }
-
-    @Override
-    public int[] addDir(Item dir) {
-//        int[] indexs = null;
-//        if ((indexs = manager.getFAT1().getFreeClus(1))!=null){//有空闲空间
-//            Sector sector = new DefaultSector(new byte[Constant.SECTOR_SIZE]);
-//            List<Sector> sectors = new ArrayList<>();
-//            sectors.add(sector);
-//            store(indexs,sectors);
-//            load(dir);
-//            Dictionary currentDir = manager.getCurrentDictionary();
-//            currentDir.addItem(dir);
-//            currentDir.store();
-//        }
-        return null;
-    }
-
-    @Override
-    public int[] edit(Item item, String content) {
-        // TODO: 2017/5/11 这个暂时不用去实现
-        return null;
-    }
 
     @Override
     public Sector getSector(int secNum) {
@@ -348,7 +281,20 @@ public class DefaultData implements Data {
             fatherItem[i] = Constant.BLANK_SPACE;
         }
         fatherItem[11] = Constant.ITEM_ATTR_DIR;
-        // TODO: 2017/5/17 时间暂时不做处理
+        int[] time = Byte2Int.getTime();
+        currentItem[22] = new Integer(time[0]&0x00FF).byteValue();
+        currentItem[23] = new Integer((time[0]&0xFF00)>>8).byteValue();
+        currentItem[24] = new Integer((time[1]&0x00FF)).byteValue();
+        currentItem[25] = new Integer((time[1]&0xFF00)).byteValue();
+
+        fatherItem[22] = new Integer(time[0]&0x00FF).byteValue();
+        fatherItem[23] = new Integer((time[0]&0xFF00)>>8).byteValue();
+        fatherItem[24] = new Integer((time[1]&0x00FF)).byteValue();
+        fatherItem[25] = new Integer((time[1]&0xFF00)).byteValue();
+
+
+
+
         byte[] fst_Sec = new byte[Constant.SECTOR_SIZE];
         System.arraycopy(currentItem,0,fst_Sec,0,Constant.ITEM_SIZE);
         System.arraycopy(fatherItem,0,fst_Sec,Constant.ITEM_SIZE,Constant.ITEM_SIZE);

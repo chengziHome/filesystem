@@ -3,6 +3,7 @@ package me.ichengzi.filesystem.model.impl;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import jdk.internal.util.xml.impl.Input;
 import me.ichengzi.filesystem.model.*;
+import me.ichengzi.filesystem.util.Byte2Int;
 import me.ichengzi.filesystem.util.Constant;
 
 import java.io.*;
@@ -162,11 +163,14 @@ public class DefaultDisk implements Disk {
         for (int i = 0; i < 10; i++) {
             bs[pos++] = 0x00;
         }
-        // TODO: 2017/5/20 下面四位是时间到后面统一更改
-        bs[pos++] = 0x4C;
-        bs[pos++] = 0x76;
-        bs[pos++] = (byte) 0xB2;
-        bs[pos++] = 0x4A;
+        int[] time = Byte2Int.getTime();
+
+        bs[pos++] = new Integer(time[0]&0x00FF).byteValue();
+        bs[pos++] = new Integer((time[0]&0xFF00)>>8).byteValue();
+        bs[pos++] = new Integer((time[1]&0x00FF)).byteValue();
+        bs[pos++] = new Integer((time[1]&0xFF00)).byteValue();
+
+
         bs[pos++] = 0x00;
         bs[pos++] = 0x00;
         bs[pos++] = 0x00;
@@ -278,10 +282,6 @@ public class DefaultDisk implements Disk {
     public byte[] getBytes() {
         return bytes;
     }
-
-    // TODO: 2017/5/10 定义好各个数据类型之后再来写这里的load过程
-
-
 
     private Boot loadBoot(){
         boot = new DefaultBoot(Arrays.copyOfRange(bytes,0,Constant.BOOT_SECNUM*Constant.SECTOR_SIZE));

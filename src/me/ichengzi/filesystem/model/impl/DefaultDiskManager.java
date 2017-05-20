@@ -3,6 +3,7 @@ package me.ichengzi.filesystem.model.impl;
 import me.ichengzi.filesystem.model.*;
 import me.ichengzi.filesystem.model.Dictionary;
 import me.ichengzi.filesystem.model.File;
+import me.ichengzi.filesystem.util.Byte2Int;
 import me.ichengzi.filesystem.util.Constant;
 import me.ichengzi.filesystem.util.ReturnUtil;
 
@@ -142,14 +143,13 @@ public class DefaultDiskManager implements DiskManager{
 
         Item fileItem = new DefaultItem();
 
-        // TODO: 2017/5/17 文件名在长度和扩展名方面还有BUG待改善
         fileItem.setDir_Name(fileName);
         fileItem.setDir_Attr(Constant.ITEM_ATTR_FILE);
         fileItem.setReserve("");
 
-        // TODO: 2017/5/17 设置时间还是有点麻烦
-        fileItem.setDir_WrtTime(0x00007648);
-        fileItem.setDir_WrtDate(0x00004AAc);
+        int[] time = Byte2Int.getTime();
+        fileItem.setDir_WrtTime(time[0]);
+        fileItem.setDir_WrtDate(time[1]);
         fileItem.setDir_FstClus(indexs[0]);
         fileItem.setDir_FileSize(0);
 
@@ -194,9 +194,10 @@ public class DefaultDiskManager implements DiskManager{
         dirItem.setDir_Attr(Constant.ITEM_ATTR_DIR);
         dirItem.setReserve("");
 
-        // TODO: 2017/5/17 设置时间还是有点麻烦
-        dirItem.setDir_WrtTime(0x00007648);
-        dirItem.setDir_WrtDate(0x00004AAc);
+        int[] time = Byte2Int.getTime();
+        dirItem.setDir_WrtTime(time[0]);
+        dirItem.setDir_WrtDate(time[1]);
+
         dirItem.setDir_FstClus(indexs[0]);
         dirItem.setDir_FileSize(0);
 

@@ -198,6 +198,22 @@ public class DefaultDir implements Dictionary,Item {
         store();//将sectors的byte数组中的变化映射到Data数组中去
     }
 
+    @Override
+    public void itemStore(Item item) {
+        for (int i = 0; i < items.size(); i++) {
+            Item tmp = items.get(i);
+            if (item==tmp){
+                int item_num = Constant.SECTOR_SIZE/Constant.ITEM_SIZE;
+                int a = i/item_num;
+                int b = i%item_num;
+                Sector sector = sectors.get(a);
+                sector.setBytes(item.getBytes(),b* Constant.ITEM_SIZE);
+                break;
+            }
+
+        }
+    }
+
 
     /**
      * 注意这里的store方法有两个任务：

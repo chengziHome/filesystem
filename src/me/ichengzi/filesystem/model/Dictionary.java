@@ -22,6 +22,8 @@ public interface Dictionary {
     void remove(String name);//仅仅能删除文件
     void removeAllSubDir();
 
+
+    void itemStore(Item item);
     void store();//尽管目前每次修改目录页仅仅涉及到一条目录项的变动，但是实现方式上还是整个扇区的覆盖直接重写。
 
     List<Sector> getSectors();

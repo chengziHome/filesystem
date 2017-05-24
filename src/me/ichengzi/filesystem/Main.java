@@ -28,19 +28,21 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
+        controller.init();
         System.out.println("请输入命令");
-
         Scanner scanner = new Scanner(System.in);
         while(scanner.hasNextLine()){
             String cmdStr = scanner.nextLine();
             if ("".equals(cmdStr)){
                 continue;
             }
-            String[] cmds = cmdStr.split("\\s+");
+            String[] cmds = cmdStr.trim().split("\\s+");
             String operation = cmds[0];
 
             switch (operation){
+                //暂时隐藏掉这个命令
                 case "init":
+
                     if (controller.hasInitialized()){
                         error("The disk has been initialized already!!!");
                     }else{
@@ -108,12 +110,13 @@ public class Main {
                     }
 
                     break;
-                case "list":
+                case "ls":
                     if (!controller.hasInitialized()){
                         initError();
                     }else if(cmds.length!=1){
                         parameterError();
                     }else{
+                        // TODO: 2017/5/20 List的命令还有待加强
                         ReturnUtil result = controller.list();
                         List<Item> dirItems = (List<Item>) result.getData().get("dirItems");
                         List<Item> fileItems = (List<Item>) result.getData().get("fileItems");
@@ -138,14 +141,17 @@ public class Main {
                 case "help":
                     printHelpMessage();
                     break;
+                case "flush":
+                    controller.saveAll();
+                    break;
                 case "exit":
                     controller.saveAll();
                     System.out.println("Bye!");
-                    return;
+                    return ;
                 default:
                     System.out.println("Incorrect input! Type help for more detailed information.");
-
                     break;
+
                 /*
                     测试工具
                  */
@@ -156,9 +162,7 @@ public class Main {
 //                        controller.getManager().getData().printTable();
                         System.out.println("currentPath:"+controller.getManager().getCurrentPath());
                         System.out.println("currentDictionary:"+controller.getManager().getCurrentDictionary());
-
                     }
-
                     break;
                 case "pb":
                     if (!controller.hasInitialized()){
@@ -205,15 +209,16 @@ public class Main {
         System.out.println("usage:  operation [one or more options]");
         System.out.println("operations include:");
 
-        System.out.println("     init:               Initialize the disk.(You need to do this at the very beginning!");
+//        System.out.println("     init:               Initialize the disk.(You need to do this at the very beginning!");
         System.out.println("     format:             Format the disk.");
         System.out.println("     touch filename:     Create a new file with specified file name at current dictionary!");
         System.out.println("     mkdir dirname:      Create a new dictionary with specified name at current dictionary!");
         System.out.println("     rm file/dir:        Remove the specified file/dictionary.");
-        System.out.println("     list:               List all files and subDir at current dictionary!");
+        System.out.println("     ls:               List all files and subDir at current dictionary!");
         System.out.println("     cd dir|.|..:        Enter or exit the dictionary!");
         System.out.println("     edit filename:      Edit the file");
         System.out.println("     exit:               Exit the File System");
+        System.out.println("     flush:              Save all modification into the Disk");
         System.out.println("     help:               Print this help massage!");
         System.out.println("   Welcome to https://github.com/chengziHome/filesystem");
         System.out.println("help end.");

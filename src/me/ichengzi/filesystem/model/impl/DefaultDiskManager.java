@@ -101,6 +101,9 @@ public class DefaultDiskManager implements DiskManager{
         int need_sec = bs.length/Constant.SECTOR_SIZE + 1;//绝大多数情况。
         Item item = file.getItem();
 
+
+
+
         int fst_sec = item.getDir_FstClus();
         int[] new_indexs = getFAT1().ensure(fst_sec,need_sec);
         getFAT1().store();
@@ -114,6 +117,24 @@ public class DefaultDiskManager implements DiskManager{
         }
 
         getData().removeItem(file.getItem().getAbsolutePath());
+
+
+        if ("/".equals(getCurrentPath())){
+            Item item1 = getRoot().find(item.getDir_Name());
+            item1.setDir_FileSize(bs.length);
+            item1.store();
+            getRoot().store();
+        }else{
+            Dictionary currentDir = getCurrentDictionary();
+            Item item1 = currentDir.find(item.getDir_Name());
+            item1.setDir_FileSize(bs.length);
+            item1.store();
+
+            currentDir.itemStore(item1);
+            currentDir.store();
+        }
+
+        getData().removeItem(getCurrentPath());
 
     }
 
@@ -133,6 +154,9 @@ public class DefaultDiskManager implements DiskManager{
             if (!getRoot().hasAvailable())
                 return ReturnUtil.error("根目录下的目录项已经达到上限");
         }
+
+
+
         int[] indexs = getFAT1().getFreeClus(1);
         getFAT1().store();
 

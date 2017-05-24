@@ -169,7 +169,7 @@ public class Controller {
                 for (int i = 2; i < paths.length; i++) {
                     Item item = father.find(paths[i]);
                     if (item == null || item.getDir_Attr() == Constant.ITEM_ATTR_FILE) {
-                        return ReturnUtil.error(item.getDir_Name() + "目录未找到");
+                        return ReturnUtil.error(paths[i] + "目录未找到");
                     }
                     fatherPath.append(item.getDir_Name() + "/");
                     item.setAbsolutePath(fatherPath.toString());

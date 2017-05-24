@@ -17,7 +17,7 @@ public class NotePad extends JFrame implements ActionListener{
     JTextArea jta = null;
     JMenuBar jmb = null;
     JMenu jm1 = null;
-    JMenuItem jmi1 = null;
+//    JMenuItem jmi1 = null;
     JMenuItem jmi2 = null;
     File file = null;
 
@@ -41,19 +41,19 @@ public class NotePad extends JFrame implements ActionListener{
         //设置助记符,即设置快捷键alt+F
         jm1.setMnemonic('F');
         //两个子菜单
-        jmi1 = new JMenuItem("打开（O）");
-        jmi1.setMnemonic('O');
+//        jmi1 = new JMenuItem("打开（O）");
+//        jmi1.setMnemonic('O');
         jmi2 = new JMenuItem("保存");
 
         this.setJMenuBar(jmb);
         //在JMenuBar上添加JMenu
         jmb.add(jm1);
         //在JMenu上添加JMenuItem
-        jm1.add(jmi1);
+//        jm1.add(jmi1);
         jm1.add(jmi2);
 
         //为“打开”和“保存”两个按钮注册监听器
-        jmi1.addActionListener(this);
+//        jmi1.addActionListener(this);
         jmi2.addActionListener(this);
 
         this.add(jta);

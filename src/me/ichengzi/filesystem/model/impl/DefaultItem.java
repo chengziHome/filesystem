@@ -261,9 +261,9 @@ public class DefaultItem implements Item {
         bytes[26] = new Integer((dir_FstClus&0x00FF)).byteValue();
         bytes[27] = new Integer((dir_FstClus&0xFF00)>>8).byteValue();
         bytes[28] = new Integer(dir_FileSize&0x000000FF).byteValue();
-        bytes[29] = new Integer((dir_FstClus&0x0000FF00)>>8).byteValue();
-        bytes[30] = new Integer((dir_FstClus&0x00FF0000)>>16).byteValue();
-        bytes[31] = new Integer((dir_FstClus&0xFF000000)>>24).byteValue();
+        bytes[29] = new Integer((dir_FileSize&0x0000FF00)>>8).byteValue();
+        bytes[30] = new Integer((dir_FileSize&0x00FF0000)>>16).byteValue();
+        bytes[31] = new Integer((dir_FileSize&0xFF000000)>>24).byteValue();
 
     }
 

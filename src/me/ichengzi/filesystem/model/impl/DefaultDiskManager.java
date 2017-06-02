@@ -75,8 +75,6 @@ public class DefaultDiskManager implements DiskManager{
         item.setAbsolutePath(getCurrentPath()+item.getDir_Name()+"/");
         File findFile = new DefaultFile(item);
 
-
-
         return findFile;
     }
 
@@ -252,6 +250,9 @@ public class DefaultDiskManager implements DiskManager{
         Item findItem = null;
         if ("/".equals(getCurrentPath())){
             findItem = getRoot().find(file);
+            if (findItem == null){
+                return ReturnUtil.error(file+"未找到");
+            }
             int fstClus = findItem.getDir_FstClus();
             fat_indexs = getFAT1().getClusList(fstClus);
             getRoot().remove(file);

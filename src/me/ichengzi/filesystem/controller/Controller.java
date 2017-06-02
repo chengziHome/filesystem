@@ -96,11 +96,7 @@ public class Controller {
             System.out.println("file==null");
             return ReturnUtil.error("未找到文件");
         }
-
-
         new NotePad(file);
-
-
         return ReturnUtil.success();
     }
 

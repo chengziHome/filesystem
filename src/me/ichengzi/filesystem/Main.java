@@ -59,6 +59,7 @@ public class Main {
                         controller.format();
                         success("format!");
                     }
+                    currentPath();
                     break;
                 case "touch":
                     if (!controller.hasInitialized()){
@@ -71,6 +72,7 @@ public class Main {
                         if (result.getRet_code()!=0)
                             error(result.getErr_msg());
                     }
+                    currentPath();
                     break;
                 case "mkdir":
                     if (!controller.hasInitialized()){
@@ -83,6 +85,7 @@ public class Main {
                         if (result.getRet_code()!=0)
                             error(result.getErr_msg());
                     }
+                    currentPath();
                     break;
                 case "rm":
                     if (!controller.hasInitialized()){
@@ -95,6 +98,7 @@ public class Main {
                         if (result.getRet_code()!=0)
                             error(result.getErr_msg());
                     }
+                    currentPath();
                     break;
 
                 case "edit":
@@ -108,7 +112,7 @@ public class Main {
                         if (result.getRet_code()!=0)
                             error(result.getErr_msg());
                     }
-
+                    currentPath();
                     break;
                 case "ls":
                     if (!controller.hasInitialized()){
@@ -140,9 +144,11 @@ public class Main {
                     break;
                 case "help":
                     printHelpMessage();
+                    currentPath();
                     break;
                 case "flush":
                     controller.saveAll();
+                    currentPath();
                     break;
                 case "exit":
                     controller.saveAll();
@@ -150,6 +156,7 @@ public class Main {
                     return ;
                 default:
                     System.out.println("Incorrect input! Type help for more detailed information.");
+                    currentPath();
                     break;
 
                 /*
@@ -214,7 +221,7 @@ public class Main {
         System.out.println("     touch filename:     Create a new file with specified file name at current dictionary!");
         System.out.println("     mkdir dirname:      Create a new dictionary with specified name at current dictionary!");
         System.out.println("     rm file/dir:        Remove the specified file/dictionary.");
-        System.out.println("     ls:               List all files and subDir at current dictionary!");
+        System.out.println("     ls:                 List all files and subDir at current dictionary!");
         System.out.println("     cd dir|.|..:        Enter or exit the dictionary!");
         System.out.println("     edit filename:      Edit the file");
         System.out.println("     exit:               Exit the File System");
